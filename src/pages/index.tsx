@@ -3,7 +3,7 @@ import React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
+import Link from 'next/link';
 
 const Home:NextPage = () => (
   <Container maxWidth="sm">
@@ -11,7 +11,7 @@ const Home:NextPage = () => (
       <Typography variant="h4" component="h1" gutterBottom>
         Next.js example
       </Typography>
-      <Link href="/about" color="secondary">
+      <Link href="/articles" color="secondary">
         Go to the about page
       </Link>
     </Box>
