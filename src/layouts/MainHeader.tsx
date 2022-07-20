@@ -13,14 +13,14 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages    = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const MainHeader = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav]   = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenNavMenu  = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -46,12 +46,12 @@ const MainHeader = () => {
             component="a"
             href="/"
             sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.1rem',
-              color: 'inherit',
+              mr            : 2,
+              display       : { xs: 'none', md: 'flex' },
+              fontFamily    : 'monospace',
+              fontWeight    : 700,
+              letterSpacing : '.1rem',
+              color         : 'inherit',
               textDecoration: 'none',
             }}
           >
@@ -73,12 +73,12 @@ const MainHeader = () => {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
+                vertical  : 'bottom',
                 horizontal: 'left',
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
+                vertical  : 'top',
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
@@ -101,13 +101,13 @@ const MainHeader = () => {
             component="a"
             href=""
             sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
+              mr            : 2,
+              display       : { xs: 'flex', md: 'none' },
+              flexGrow      : 1,
+              fontFamily    : 'monospace',
+              fontWeight    : 700,
+              letterSpacing : '.3rem',
+              color         : 'inherit',
               textDecoration: 'none',
             }}
           >
@@ -136,12 +136,12 @@ const MainHeader = () => {
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
+                vertical  : 'top',
                 horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
+                vertical  : 'top',
                 horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
@@ -159,6 +159,5 @@ const MainHeader = () => {
     </AppBar>
   );
 };
- 
 
 export default MainHeader;

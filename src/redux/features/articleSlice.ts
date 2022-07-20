@@ -1,31 +1,33 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { PayloadAction } from "@reduxjs/toolkit";
-import { Article } from "../../types/article-types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Article } from '../../types/article-types';
 
-interface articleSliceType {
+interface ArticleSliceType {
   lists: Article[];
-  status: "loading" | "loaded" | "error" | "";
+  status: 'loading' | 'loaded' | 'error' | '';
   message?: string;
 }
 
-const initialState: articleSliceType = {
-  lists: [],
-  status: "",
+const initialState: ArticleSliceType = {
+  lists : [],
+  status: '',
 };
 
 const articleSlice = createSlice({
-  name: "article",
+  name    : 'article',
   initialState,
   reducers: {
-    getArticlesRequest: (state, action: PayloadAction<{page:number, tag:string}>) => {
-      state.status = "loading";
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getArticlesRequest: (state, action: PayloadAction<{ page:number, tag:string }>) => {
+      state.status = 'loading';
     },
     getArticlesSuccess: (state, action: PayloadAction<Article[]>) => {
-      state.lists = action.payload;
-      state.status = "loaded";
+      // eslint-disable-next-line no-multi-spaces
+      state.lists  = action.payload;
+      state.status = 'loaded';
     },
     getArticlesFailure: (state, action: PayloadAction<string>) => {
-      state.status = "error";
+      // eslint-disable-next-line no-multi-spaces
+      state.status  = 'error';
       state.message = action.payload;
     },
   },

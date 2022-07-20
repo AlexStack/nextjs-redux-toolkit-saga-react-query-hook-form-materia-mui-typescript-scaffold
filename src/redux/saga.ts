@@ -1,26 +1,21 @@
-import { call, takeLatest, put } from 'redux-Saga/effects'
-import Axios from 'axios'
-import userSlice from './features/userSlice'
-import articleSlice from './features/articleSlice'
-import * as articleApi from '../apis/article-api'
-import { PayloadAction } from '@reduxjs/toolkit'
-import { Article, ArticleFilterParams } from '../types/article-types'
-
+import { call, takeLatest, put } from 'redux-Saga/effects';
+import { PayloadAction } from '@reduxjs/toolkit';
+import articleSlice from './features/articleSlice';
+import * as articleApi from '../apis/article-api';
+import { Article, ArticleFilterParams } from '../types/article-types';
 
 export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
   try {
-    const response:Article[] = yield call(()=> articleApi.getArticles(action.payload));
-    console.log("🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ action", action)
+    const response:Article[] = yield call(() => articleApi.getArticles(action.payload));
+    console.log('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ action', action);
 
     yield put(articleSlice.actions.getArticlesSuccess(response));
   } catch (e: any) {
-    console.log("🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ e", e)
+    console.log('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ e', e);
 
     yield put(articleSlice.actions.getArticlesFailure(e.message));
   }
-  
 }
-
 
 // export function* fetchNumberSaga() {
 //   try {
@@ -36,7 +31,7 @@ export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
 // }
 
 export default function* rootSaga() {
-  yield takeLatest(articleSlice.actions.getArticlesRequest, fetchArticles)
+  yield takeLatest(articleSlice.actions.getArticlesRequest, fetchArticles);
 
   // yield takeLatest(userSlice.actions.visit, fetchNumberSaga)
 }

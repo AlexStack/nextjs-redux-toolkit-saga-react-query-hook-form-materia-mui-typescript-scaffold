@@ -1,5 +1,5 @@
 export interface Article {
-  type_of: "article";
+  type_of: 'article';
   id: number;
   title: string;
   description: string;
@@ -36,4 +36,3 @@ export interface ArticleFilterParams {
   tag?: string;
   page?: number;
 }
-

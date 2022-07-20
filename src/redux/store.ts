@@ -1,12 +1,14 @@
-import { Action, configureStore, ThunkAction, Store } from "@reduxjs/toolkit";
-import createSagaMiddleware, {Task} from 'redux-saga';
-import {createWrapper, Context, HYDRATE} from 'next-redux-wrapper';
-import rootSaga from "./saga";
-import userSlice from "./features/userSlice";
-import articleSlice from "./features/articleSlice";
+import {
+  Action, configureStore, ThunkAction, Store,
+} from '@reduxjs/toolkit';
+import createSagaMiddleware, { Task } from 'redux-saga';
+import { createWrapper } from 'next-redux-wrapper';
+import rootSaga from './saga';
+import userSlice from './features/userSlice';
+import articleSlice from './features/articleSlice';
 
 const rootReducer =  {
-  [userSlice.name]: userSlice.reducer,
+  [userSlice.name]   : userSlice.reducer,
   [articleSlice.name]: articleSlice.reducer,
 };
 
@@ -26,18 +28,17 @@ export interface SagaStore extends Store {
 
 const createReduxStore = () => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware];
-  const store = configureStore({
-    reducer: rootReducer,
+  const middlewares    = [sagaMiddleware];
+  const store          = configureStore({
+    reducer   : rootReducer,
     middleware: middlewares,
-    devTools: process.env.NEXT_PUBLIC_NODE_ENV !== "production",
+    devTools  : process.env.NEXT_PUBLIC_NODE_ENV !== 'production',
   });
-  
+
   (store as SagaStore).sagaTask = sagaMiddleware.run(rootSaga);
 
   return store;
 };
-
 
 // const store = createReduxStore();
 
@@ -48,5 +49,5 @@ export type ReduxState = ReturnType<ReduxStore['getState']>;
 export type ReduxThunk<ReturnType = void> = ThunkAction<ReturnType, ReduxState, unknown, Action>;
 
 export const reduxWrapper = createWrapper<ReduxStore>(createReduxStore, {
-  debug: process.env.NEXT_PUBLIC_NODE_ENV !== "production",
+  debug: process.env.NEXT_PUBLIC_NODE_ENV !== 'production',
 });

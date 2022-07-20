@@ -1,16 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface userSliceType {
+interface UserSliceType {
   visitorIdentityToken: string;
 }
 
-const initialState: userSliceType = {
+const initialState: UserSliceType = {
   visitorIdentityToken: '',
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name    : 'user',
   initialState,
   reducers: {
     visit: (state, action: PayloadAction<string>) => {

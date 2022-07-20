@@ -24,6 +24,6 @@ const MainFooter = () => {
       </BottomNavigation>
     </Box>
   );
-}
+};
 
 export default MainFooter;
