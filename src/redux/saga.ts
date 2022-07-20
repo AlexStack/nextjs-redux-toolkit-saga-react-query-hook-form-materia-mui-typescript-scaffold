@@ -1,4 +1,4 @@
-import { call, takeLatest, put } from 'redux-Saga/effects';
+import { call, takeLatest, put } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 import articleSlice from './features/articleSlice';
 import * as articleApi from '../apis/article-api';
