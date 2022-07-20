@@ -31,3 +31,9 @@ export interface Article {
     profile_image_90: string;
   };
 }
+
+export interface ArticleFilterParams {
+  tag?: string;
+  page?: number;
+}
+

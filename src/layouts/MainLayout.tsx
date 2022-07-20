@@ -25,7 +25,7 @@ const MainLayout = ({ children }: Props) => {
           style={{ minHeight: '100vh' }}
         >
           <MainHeader />
-          <Box sx={{ my: 4 }}>
+          <Box flex={1} overflow="auto" justifyContent='space-around' style={{ minHeight: '80vh' }}>
             {children}
           </Box>
 
