@@ -30,7 +30,7 @@ const createReduxStore = () => {
   const store = configureStore({
     reducer: rootReducer,
     middleware: middlewares,
-    devTools: process.env.NEXT_PUBLIC_NODE_ENV === "development",
+    devTools: process.env.NEXT_PUBLIC_NODE_ENV !== "production",
   });
   
   (store as SagaStore).sagaTask = sagaMiddleware.run(rootSaga);
@@ -48,5 +48,5 @@ export type ReduxState = ReturnType<ReduxStore['getState']>;
 export type ReduxThunk<ReturnType = void> = ThunkAction<ReturnType, ReduxState, unknown, Action>;
 
 export const reduxWrapper = createWrapper<ReduxStore>(createReduxStore, {
-  debug: process.env.NEXT_PUBLIC_NODE_ENV === "development",
+  debug: process.env.NEXT_PUBLIC_NODE_ENV !== "production",
 });

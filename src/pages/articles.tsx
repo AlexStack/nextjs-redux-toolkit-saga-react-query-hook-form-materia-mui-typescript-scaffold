@@ -37,7 +37,7 @@ const Articles: NextPage = (props) => {
 export const getStaticProps: GetStaticProps = reduxWrapper.getStaticProps(store => async ({ params }) => {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery(['articles', { page: 1 }], reactQueryFn.getArticles);
+  await queryClient.prefetchQuery(['articles', { page: 1, tag: 'react-query' }], reactQueryFn.getArticles);
 
   await store.dispatch(articleSlice.actions.getArticlesRequest({tag: 'remix', page: 1}));
   store.dispatch(END);
