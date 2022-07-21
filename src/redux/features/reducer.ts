@@ -16,15 +16,14 @@ const sliceReducer =  {
 };
 
 const rootReducer = (state: any, action: AnyAction): CombinedState<ReducerState> => {
-  switch (action.type) {
-  case HYDRATE:
+  if (action.type === HYDRATE) {
     return {
       ...state,
       ...action.payload,
     };
-  default:
-    return combineReducers(sliceReducer)(state, action);
   }
+
+  return combineReducers(sliceReducer)(state, action);
 };
 
 export default rootReducer;

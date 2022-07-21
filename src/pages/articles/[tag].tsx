@@ -12,6 +12,7 @@ import articleSlice from '../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
 import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
+import { mainConfig } from '../../configs/main-config';
 
 const Articles: NextPage = (props) => {
   // example of React Query usage
@@ -29,14 +30,16 @@ const Articles: NextPage = (props) => {
   const tag           = getRouterParam(router.query.tag, DEFAULT_KEYWORD);
   const page          = getRouterParam(router.query.page, '1');
 
-  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, router, reduxArticle);
+  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, dataItems.length);
 
   useEffect(
     () => {
-      reduxDispatch(articleSlice.actions.getArticlesRequest({
-        tag : tag.toLowerCase(),
-        page: parseInt(page, 10),
-      }));
+      if (!mainConfig.debugStaticPage) {
+        reduxDispatch(articleSlice.actions.getArticlesRequest({
+          tag : tag.toLowerCase(),
+          page: parseInt(page, 10),
+        }));
+      }
     },
     [page, reduxDispatch, tag],
   );
@@ -82,21 +85,26 @@ export const getStaticPaths: GetStaticPaths = async () => {
  */
 export const getStaticProps: GetStaticProps = reduxWrapper.getStaticProps(
   (store) => async ({ params }) => {
-    await store.dispatch(articleSlice.actions.getArticlesRequest({
-      tag : getRouterParam(params?.tag, DEFAULT_KEYWORD),
+    const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD);
+
+    store.dispatch(articleSlice.actions.getArticlesRequest({
+      tag,
       page: 1,
     }));
     store.dispatch(END);
-    // await store.sagaTask?.toPromise();
+    await store.sagaTask.toPromise();
 
-    // console.log(
-    //   '🚀 ~ file: articles.tsx ~ line 39 ~ :GetStaticProps=reduxWrapper.getStaticProps ~ store',
-    //   params,
-    //   store.getState(),
-    // );
+    console.log(
+      '🚀 ~ file: articles.tsx ~ line 39 ~ :store.getState',
+      // params,
+      store.getState(),
+      // rs,
+    );
 
     return {
-      props: {},
+      props: {
+        tag,
+      },
 
     };
   },

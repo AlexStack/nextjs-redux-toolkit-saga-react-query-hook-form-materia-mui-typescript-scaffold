@@ -24,10 +24,10 @@ import rootReducer from './features/reducer';
 // sagaMiddleware.run(rootSaga);
 
 export interface SagaStore extends Store {
-  sagaTask?: Task;
+  sagaTask: Task;
 }
 
-const createReduxStore = () => {
+const createReduxStore = ():SagaStore => {
   const sagaMiddleware = createSagaMiddleware();
   const middlewares    = [sagaMiddleware];
   const store          = configureStore({
@@ -38,7 +38,7 @@ const createReduxStore = () => {
 
   (store as SagaStore).sagaTask = sagaMiddleware.run(rootSaga);
 
-  return store;
+  return store as SagaStore;
 };
 
 // const store = createReduxStore();

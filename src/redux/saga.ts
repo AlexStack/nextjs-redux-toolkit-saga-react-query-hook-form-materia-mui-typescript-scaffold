@@ -7,7 +7,7 @@ import { Article, ArticleFilterParams } from '../types/article-types';
 export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
   try {
     const response:Article[] = yield call(() => articleApi.getArticles(action.payload));
-    console.log('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ action', action);
+    console.log('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ action', action, response.length);
 
     yield put(articleSlice.actions.getArticlesSuccess(response));
   } catch (e: any) {
