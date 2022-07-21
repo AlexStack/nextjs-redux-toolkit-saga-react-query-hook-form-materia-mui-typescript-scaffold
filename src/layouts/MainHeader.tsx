@@ -13,9 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
+import { TOP_MENU_PAGES } from '../constants/article-const';
 
-const pages    = ['Redux', 'ReactNative', 'MUI', 'Typescript', 'NextJs', 'ReactQuery', 'ESLint', 'Javascript', 'Jest', 'Node', 'SEO', 'AWS', 'React', 'CSS'
-];
+const pages    = TOP_MENU_PAGES;
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const MainHeader = () => {

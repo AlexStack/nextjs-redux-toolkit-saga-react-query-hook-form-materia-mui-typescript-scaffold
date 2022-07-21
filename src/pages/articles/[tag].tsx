@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from 'next';
+import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React, { useEffect } from 'react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import MainLayout from '../../layouts/MainLayout';
 import articleSlice from '../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
+import { TOP_MENU_PAGES } from '../../constants/article-const';
 
 const Articles: NextPage = (props) => {
   // example of React Query usage
@@ -66,11 +67,21 @@ export const getStaticProps4reactQuery: GetStaticProps = async () => {
   };
 };
 
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = TOP_MENU_PAGES.map((item: string) => ({
+    params: {
+      tag: item,
+    },
+  }));
+
+  return { paths, fallback: true };
+};
+
 /**
  * Code example: use Redux Saga for server side data fetching
  */
-export const getStaticProps222: GetStaticProps = reduxWrapper.getStaticProps(
-  (store) => async ({ params }) => {
+export const getStaticProps: GetStaticProps = reduxWrapper.getStaticProps(
+  (store) => async () => {
     await store.dispatch(articleSlice.actions.getArticlesRequest({ tag: 'remix', page: 1 }));
     store.dispatch(END);
     // await store.sagaTask?.toPromise();
