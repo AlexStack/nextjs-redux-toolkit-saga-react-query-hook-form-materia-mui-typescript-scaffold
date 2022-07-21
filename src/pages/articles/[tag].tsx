@@ -32,7 +32,7 @@ const Articles: NextPage = (props) => {
 
   const dataItems = mainConfig.enableReduxForStaticProps ? reduxArticle.lists : rqDataItems;
 
-  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, dataItems.length, rqDataItems?.length);
+  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, reduxArticle.lists?.length, rqDataItems?.length);
 
   useEffect(
     () => {
