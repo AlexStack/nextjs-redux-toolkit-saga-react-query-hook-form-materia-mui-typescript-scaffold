@@ -12,8 +12,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import Link from 'next/link';
 
-const pages    = ['Products', 'Pricing', 'Blog'];
+const pages    = ['Redux', 'ReactNative', 'MUI', 'Typescript', 'NextJs', 'ReactQuery', 'ESLint', 'Javascript', 'Jest', 'Node', 'SEO', 'AWS', 'React', 'CSS'
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const MainHeader = () => {
@@ -40,24 +42,24 @@ const MainHeader = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr            : 2,
-              display       : { xs: 'none', md: 'flex' },
-              fontFamily    : 'monospace',
-              fontWeight    : 700,
-              letterSpacing : '.1rem',
-              color         : 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            React
-          </Typography>
-
+          <Link href="/">
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr            : 2,
+                display       : { xs: 'none', md: 'flex' },
+                fontFamily    : 'monospace',
+                fontWeight    : 700,
+                letterSpacing : '.1rem',
+                color         : 'inherit',
+                textDecoration: 'none',
+                cursor        : 'pointer',
+              }}
+            >
+              React
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -89,7 +91,11 @@ const MainHeader = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center">
+                    <Link href={`/articles/${page}`}>
+                      {page}
+                    </Link>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -115,13 +121,17 @@ const MainHeader = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+              <Link href={`/articles/${page}`}>
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 2, color: 'white', display: 'block', textTransform: 'none',
+                  }}
+                >
+                  {page}
+                </Button>
+              </Link>
             ))}
           </Box>
 

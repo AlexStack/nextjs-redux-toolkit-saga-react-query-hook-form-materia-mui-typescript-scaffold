@@ -3,12 +3,14 @@ import React, { useEffect } from 'react';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
-import { reactQueryFn } from '../apis/article-api';
-import ArticleImageList from '../components/ArticleImageList';
-import MainLayout from '../layouts/MainLayout';
+import { useRouter } from 'next/router';
+import { reactQueryFn } from '../../apis/article-api';
+import ArticleImageList from '../../components/ArticleImageList';
+import MainLayout from '../../layouts/MainLayout';
 
-import articleSlice from '../redux/features/articleSlice';
-import { ReduxState, reduxWrapper } from '../redux/store';
+import articleSlice from '../../redux/features/articleSlice';
+import { ReduxState, reduxWrapper } from '../../redux/store';
+import getRouterParam from '../../utils/get-router-param';
 
 const Articles: NextPage = (props) => {
   // example of React Query usage
@@ -17,18 +19,25 @@ const Articles: NextPage = (props) => {
   //   reactQueryFn.getArticles
   //   );
 
+  const router = useRouter();
+
   // example of Redux usage
   const reduxDispatch = useDispatch();
   const reduxArticle  = useSelector((reduxState: ReduxState) => reduxState.article);
   const dataItems     = reduxArticle.lists;
+  const tag           = getRouterParam(router.query.tag, 'react');
+  const page          = getRouterParam(router.query.page, '1');
 
-  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, reduxArticle);
+  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, router, reduxArticle);
 
   useEffect(
     () => {
-      reduxDispatch(articleSlice.actions.getArticlesRequest({ tag: 'saga', page: 1 }));
+      reduxDispatch(articleSlice.actions.getArticlesRequest({
+        tag : tag.toLowerCase(),
+        page: parseInt(page, 10),
+      }));
     },
-    [reduxDispatch],
+    [page, reduxDispatch, tag],
   );
 
   return (
@@ -60,8 +69,8 @@ export const getStaticProps4reactQuery: GetStaticProps = async () => {
 /**
  * Code example: use Redux Saga for server side data fetching
  */
-export const getStaticProps: GetStaticProps = reduxWrapper.getStaticProps(
-  (store) => async () => {
+export const getStaticProps222: GetStaticProps = reduxWrapper.getStaticProps(
+  (store) => async ({ params }) => {
     await store.dispatch(articleSlice.actions.getArticlesRequest({ tag: 'remix', page: 1 }));
     store.dispatch(END);
     // await store.sagaTask?.toPromise();
