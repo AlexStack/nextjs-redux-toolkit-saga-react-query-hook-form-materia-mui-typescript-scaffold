@@ -1,6 +1,6 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import React, { useEffect } from 'react';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import { useRouter } from 'next/router';
@@ -15,30 +15,29 @@ import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
 import { mainConfig } from '../../configs/main-config';
 
 const Articles: NextPage = (props) => {
-  // example of React Query usage
-  // const { status, error, data:dataItems} = useQuery(
-  //   ['articles', { page: 1 }],
-  //   reactQueryFn.getArticles
-  //   );
-
   const router = useRouter();
+  const tag    = getRouterParam(router.query.tag, DEFAULT_KEYWORD).toLowerCase();
+  const page   = parseInt(getRouterParam(router.query.page, '1'), 10);
 
   // example of Redux usage
   const reduxDispatch = useDispatch();
   const reduxArticle  = useSelector((reduxState: ReduxState) => reduxState.article);
-  const dataItems     = reduxArticle.lists;
-  const tag           = getRouterParam(router.query.tag, DEFAULT_KEYWORD);
-  const page          = getRouterParam(router.query.page, '1');
 
-  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, dataItems.length);
+  // example of React Query usage
+  const { data:rqDataItems } = useQuery(
+    ['articles', { tag, page }],
+    reactQueryFn.getArticles,
+    { enabled: !mainConfig.enableReduxForStaticProps },
+  );
+
+  const dataItems = mainConfig.enableReduxForStaticProps ? reduxArticle.lists : rqDataItems;
+
+  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, dataItems.length, rqDataItems?.length);
 
   useEffect(
     () => {
       if (!mainConfig.debugStaticPage) {
-        reduxDispatch(articleSlice.actions.getArticlesRequest({
-          tag : tag.toLowerCase(),
-          page: parseInt(page, 10),
-        }));
+        reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
       }
     },
     [page, reduxDispatch, tag],
@@ -49,25 +48,6 @@ const Articles: NextPage = (props) => {
       <ArticleImageList dataItems={dataItems} />
     </MainLayout>
   );
-};
-
-/**
- * Code example: use React Query for server side data fetching
- */
-export const getStaticProps4reactQuery: GetStaticProps = async ({ params }) => {
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery(
-    ['articles', { page: 1, tag: getRouterParam(params?.tag, DEFAULT_KEYWORD) }],
-    reactQueryFn.getArticles,
-  );
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -81,16 +61,34 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 /**
+ * Code example: use React Query for server side data fetching
+ */
+export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) => {
+  const queryClient = new QueryClient();
+
+  const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
+
+  await queryClient.prefetchQuery(
+    ['articles', { page: 1, tag }],
+    reactQueryFn.getArticles,
+  );
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+
+  };
+};
+
+/**
  * Code example: use Redux Saga for server side data fetching
  */
-export const getStaticProps: GetStaticProps = reduxWrapper.getStaticProps(
+export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticProps(
   (store) => async ({ params }) => {
-    const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD);
+    const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
 
-    store.dispatch(articleSlice.actions.getArticlesRequest({
-      tag,
-      page: 1,
-    }));
+    store.dispatch(articleSlice.actions.getArticlesRequest({ tag, page: 1 }));
     store.dispatch(END);
     await store.sagaTask.toPromise();
 
@@ -109,5 +107,9 @@ export const getStaticProps: GetStaticProps = reduxWrapper.getStaticProps(
     };
   },
 );
+
+export const getStaticProps = mainConfig.enableReduxForStaticProps
+  ? getStaticPropsFromRedux
+  : getStaticPropsFromReactQuery;
 
 export default Articles;
