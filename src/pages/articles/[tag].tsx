@@ -11,7 +11,7 @@ import MainLayout from '../../layouts/MainLayout';
 import articleSlice from '../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
-import { TOP_MENU_PAGES } from '../../constants/article-const';
+import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
 
 const Articles: NextPage = (props) => {
   // example of React Query usage
@@ -26,7 +26,7 @@ const Articles: NextPage = (props) => {
   const reduxDispatch = useDispatch();
   const reduxArticle  = useSelector((reduxState: ReduxState) => reduxState.article);
   const dataItems     = reduxArticle.lists;
-  const tag           = getRouterParam(router.query.tag, 'react');
+  const tag           = getRouterParam(router.query.tag, DEFAULT_KEYWORD);
   const page          = getRouterParam(router.query.page, '1');
 
   console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, router, reduxArticle);
@@ -51,11 +51,11 @@ const Articles: NextPage = (props) => {
 /**
  * Code example: use React Query for server side data fetching
  */
-export const getStaticProps4reactQuery: GetStaticProps = async () => {
+export const getStaticProps4reactQuery: GetStaticProps = async ({ params }) => {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery(
-    ['articles', { page: 1, tag: 'react-query' }],
+    ['articles', { page: 1, tag: getRouterParam(params?.tag, DEFAULT_KEYWORD) }],
     reactQueryFn.getArticles,
   );
 
@@ -81,20 +81,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
  * Code example: use Redux Saga for server side data fetching
  */
 export const getStaticProps: GetStaticProps = reduxWrapper.getStaticProps(
-  (store) => async () => {
-    await store.dispatch(articleSlice.actions.getArticlesRequest({ tag: 'remix', page: 1 }));
+  (store) => async ({ params }) => {
+    await store.dispatch(articleSlice.actions.getArticlesRequest({
+      tag : getRouterParam(params?.tag, DEFAULT_KEYWORD),
+      page: 1,
+    }));
     store.dispatch(END);
     // await store.sagaTask?.toPromise();
 
-    console.log(
-      '🚀 ~ file: articles.tsx ~ line 39 ~ constgetStaticProps:GetStaticProps=reduxWrapper.getStaticProps ~ store',
-      store.getState(),
-    );
+    // console.log(
+    //   '🚀 ~ file: articles.tsx ~ line 39 ~ :GetStaticProps=reduxWrapper.getStaticProps ~ store',
+    //   params,
+    //   store.getState(),
+    // );
 
     return {
-      props: {
-
-      },
+      props: {},
 
     };
   },

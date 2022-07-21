@@ -4,13 +4,14 @@ import {
 import createSagaMiddleware, { Task } from 'redux-saga';
 import { createWrapper } from 'next-redux-wrapper';
 import rootSaga from './saga';
-import userSlice from './features/userSlice';
-import articleSlice from './features/articleSlice';
+import rootReducer from './features/reducer';
+// import userSlice from './features/userSlice';
+// import articleSlice from './features/articleSlice';
 
-const rootReducer =  {
-  [userSlice.name]   : userSlice.reducer,
-  [articleSlice.name]: articleSlice.reducer,
-};
+// const rootReducer =  {
+//   [userSlice.name]   : userSlice.reducer,
+//   [articleSlice.name]: articleSlice.reducer,
+// };
 
 // const sagaMiddleware = createSagaMiddleware();
 
