@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { reactQueryFn } from '../../apis/article-api';
 import ArticleImageList from '../../components/ArticleImageList';
 import MainLayout from '../../layouts/MainLayout';
-
 import articleSlice from '../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
@@ -32,11 +31,16 @@ const Articles: NextPage = (props) => {
 
   const dataItems = mainConfig.enableReduxForStaticProps ? reduxArticle.lists : rqDataItems;
 
-  console.log('🚀 ~ file: articles.tsx ~ line 10 ~ props', props, reduxArticle.lists?.length, rqDataItems?.length);
+  console.log(
+    '🚀 ~ file: articles.tsx ~ line 10 ~ props',
+    props,
+    reduxArticle.lists?.length,
+    rqDataItems?.length,
+  );
 
   useEffect(
     () => {
-      if (!mainConfig.debugStaticPage) {
+      if (!mainConfig.enableStaticPageDebug) {
         reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
       }
     },
@@ -77,7 +81,9 @@ export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) =
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-
+    // Next.js will attempt to re-generate the page:
+    // - When a request comes in at most once every XXX seconds
+    revalidate: 36000, // 10 hours
   };
 };
 
@@ -103,7 +109,9 @@ export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticPro
       props: {
         tag,
       },
-
+      // Next.js will attempt to re-generate the page:
+      // - When a request comes in at most once every XXX seconds
+      revalidate: 36000, // 10 hours
     };
   },
 );
