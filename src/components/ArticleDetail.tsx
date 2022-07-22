@@ -14,8 +14,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Article } from '../types/article-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Article, UserSliceType } from '../types/article-types';
 import { getArticleImgUrl } from '../helpers/article-helper';
+import userSlice from '../redux/features/userSlice';
+import { ReduxState } from '../redux/store';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -38,10 +42,20 @@ interface Props {
 }
 
 const ArticleDetail = ({ article }:Props) => {
-  const [expanded, setExpanded] = React.useState(true);
+  const reduxDispatch = useDispatch();
+
+  const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
+
+  const [expanded, setExpanded] = useState(true);
+
+  const isFavorite = reduxUserData.favoriteItems.some((item) => item.id === article.id);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const onClickFavorite = () => {
+    reduxDispatch(userSlice.actions.favoriteItemRequest(article));
   };
 
   return (
@@ -76,7 +90,11 @@ const ArticleDetail = ({ article }:Props) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
+        <IconButton
+          aria-label="add to favorites"
+          color={isFavorite ? 'error' : 'default'}
+          onClick={onClickFavorite}
+        >
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">

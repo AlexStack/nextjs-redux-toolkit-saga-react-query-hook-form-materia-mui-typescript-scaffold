@@ -48,3 +48,18 @@ export interface Article {
     profile_image_90: string;
   };
 }
+
+// redux slice types
+export interface UserSliceType {
+  identityToken: string;
+  visitedTimes: number;
+  recentItems: FavoriteItem[];
+  favoriteItems: FavoriteItem[];
+}
+
+export interface ArticleSliceType {
+  lists: Article[];
+  detail: Article | null;
+  status: 'loading' | 'loaded' | 'error' | '';
+  message?: string;
+}

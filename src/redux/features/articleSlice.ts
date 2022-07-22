@@ -1,12 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Article } from '../../types/article-types';
-
-interface ArticleSliceType {
-  lists: Article[];
-  detail: Article | null;
-  status: 'loading' | 'loaded' | 'error' | '';
-  message?: string;
-}
+import { Article, ArticleSliceType } from '../../types/article-types';
 
 const initialState: ArticleSliceType = {
   lists : [],

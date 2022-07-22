@@ -27,14 +27,14 @@ const Articles: NextPage = () => {
   const { data:rqDataItems } = useQuery(
     ['articles', { tag, page }],
     reactQueryFn.getArticles,
-    { enabled: !mainConfig.enableReduxForStaticProps },
+    { enabled: !mainConfig.isReduxForStaticPropsEnabled },
   );
 
-  const dataItems = mainConfig.enableReduxForStaticProps ? reduxArticle.lists : rqDataItems;
+  const dataItems = mainConfig.isReduxForStaticPropsEnabled ? reduxArticle.lists : rqDataItems;
 
   useEffect(
     () => {
-      if (!mainConfig.enableStaticPageDebug) {
+      if (!mainConfig.isStaticPageDebugDisabled) {
         reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
       }
       reduxDispatch(userSlice.actions.visitRequest());
@@ -93,7 +93,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: true };
 };
 
-export const getStaticProps = mainConfig.enableReduxForStaticProps
+export const getStaticProps = mainConfig.isReduxForStaticPropsEnabled
   ? getStaticPropsFromRedux
   : getStaticPropsFromReactQuery;
 
