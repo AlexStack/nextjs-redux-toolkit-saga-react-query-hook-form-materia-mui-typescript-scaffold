@@ -22,36 +22,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     [reduxStore],
   );
 
-  return enableReduxPersist ? (
-    <PersistGate
-      loading={null}
-      persistor={(reduxStore as ReduxStore).reduxPersistData}
-    >
-      <QueryClientProvider client={queryClient}>
-
-        <Hydrate state={pageProps.dehydratedState}>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <Component {...pageProps} />
-        </Hydrate>
-
-        <ReactQueryDevtools initialIsOpen={false} />
-
-      </QueryClientProvider>
-    </PersistGate>
-  ) : (
-    <QueryClientProvider client={queryClient}>
-
-      <Hydrate state={pageProps.dehydratedState}>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <Component {...pageProps} />
-      </Hydrate>
-
-      <ReactQueryDevtools initialIsOpen={false} />
-
-    </QueryClientProvider>
-  );
-
-  // return (
+  // return enableReduxPersist ? (
   //   <PersistGate
   //     loading={null}
   //     persistor={(reduxStore as ReduxStore).reduxPersistData}
@@ -67,7 +38,38 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   //     </QueryClientProvider>
   //   </PersistGate>
+  // ) : (
+  //   <QueryClientProvider client={queryClient}>
+
+  //     <Hydrate state={pageProps.dehydratedState}>
+  //       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+  //       <Component {...pageProps} />
+  //     </Hydrate>
+
+  //     <ReactQueryDevtools initialIsOpen={false} />
+
+  //   </QueryClientProvider>
   // );
+
+  return (
+    <PersistGate
+      loading={null}
+      persistor={(reduxStore as ReduxStore).reduxPersistData}
+    >
+      {() => (
+        <QueryClientProvider client={queryClient}>
+
+          <Hydrate state={pageProps.dehydratedState}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Component {...pageProps} />
+          </Hydrate>
+
+          <ReactQueryDevtools initialIsOpen={false} />
+
+        </QueryClientProvider>
+      )}
+    </PersistGate>
+  );
 };
 
 export default reduxWrapper.withRedux(MyApp);

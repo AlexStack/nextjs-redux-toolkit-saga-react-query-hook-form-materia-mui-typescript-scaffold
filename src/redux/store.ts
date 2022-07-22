@@ -11,7 +11,7 @@ import rootReducer from './features/reducer';
 
 export interface SagaStore extends Store {
   sagaTask: Task;
-  reduxPersistData: Persistor | null;
+  reduxPersistData: Persistor;
 }
 
 let newRootReducer = rootReducer;
@@ -37,7 +37,7 @@ const createReduxStore = ():SagaStore => {
 
   (store as SagaStore).reduxPersistData = enableReduxPersist
     ? persistStore(store)
-    : null;
+    : persistStore(store);
 
   return store as SagaStore;
 };
