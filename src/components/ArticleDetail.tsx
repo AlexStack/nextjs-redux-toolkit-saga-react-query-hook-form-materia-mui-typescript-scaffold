@@ -111,8 +111,8 @@ const ArticleDetail = ({ article }:Props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Content:</Typography>
-          <Typography paragraph>
+          <Typography paragraph component="h1">{article.title}</Typography>
+          <Typography paragraph component="div">
             <div
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: article.body_html || '' }}
