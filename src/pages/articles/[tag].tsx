@@ -12,6 +12,7 @@ import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
 import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
 import { mainConfig } from '../../configs/main-config';
+import userSlice from '../../redux/features/userSlice';
 
 const Articles: NextPage = () => {
   const router = useRouter();
@@ -34,9 +35,9 @@ const Articles: NextPage = () => {
   useEffect(
     () => {
       if (!mainConfig.enableStaticPageDebug) {
-        console.log('🚀 ~ file: [tag].tsx ~ line 37 ~ mainConfig', mainConfig);
         reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
       }
+      // reduxDispatch(userSlice.actions.visitRequest());
     },
     [page, reduxDispatch, tag],
   );

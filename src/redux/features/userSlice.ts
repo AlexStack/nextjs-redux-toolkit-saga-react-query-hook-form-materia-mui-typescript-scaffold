@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface UserSliceType {
   visitorIdentityToken: string;
+  visitedTimes: number;
 }
 
 const initialState: UserSliceType = {
   visitorIdentityToken: '',
+  visitedTimes        : 1,
 };
 
 const userSlice = createSlice({
@@ -13,7 +15,11 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     visitRequest: (state) => {
-      state.visitorIdentityToken = 'random-token';
+      if (state.visitorIdentityToken === '') {
+        state.visitorIdentityToken = `random-token-${new Date()}`;
+      }
+
+      state.visitedTimes += 1;
     },
   },
 });

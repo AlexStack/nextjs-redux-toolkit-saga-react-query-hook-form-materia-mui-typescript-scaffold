@@ -10,6 +10,7 @@ This is a scaffold for React medium-to-large project.
 * Redux Toolkit [Redux Toolkit](https://redux-toolkit.js.org/).
 * Async middleware for Redux [Redux-Saga](https://redux-saga.js.org/).
 * Next and Redux connector [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper).
+* Redux Persist - Persist and rehydrate a redux store. save to localStorage by default. [redux-persist](https://github.com/rt2zz/redux-persist)
 
 * React Query for **server side** query [react-query](https://tanstack.com/query/v4/docs/adapters/react-query)
 * Form library [React Hook Form](https://react-hook-form.com/).
