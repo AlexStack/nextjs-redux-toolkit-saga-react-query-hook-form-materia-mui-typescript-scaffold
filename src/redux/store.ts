@@ -16,10 +16,10 @@ export interface SagaStore extends Store {
 
 let newRootReducer = rootReducer;
 
-const enableReduxPersist = mainConfig.reduxPersistKey?.length && mainConfig.isClientSide;
+const enableReduxPersist = mainConfig.reduxPersistConfigs.enabled && mainConfig.isClientSide;
 if (enableReduxPersist) {
   newRootReducer = persistReducer({
-    key: mainConfig.reduxPersistKey,
+    ...mainConfig.reduxPersistConfigs,
     storage,
   }, rootReducer);
 }
@@ -36,7 +36,7 @@ const createReduxStore = ():SagaStore => {
 
   (store as SagaStore).reduxPersistData = enableReduxPersist
     ? persistStore(store)
-    : persistStore(store);
+    : persistStore(store); // todo: don't persist on server side
 
   return store as SagaStore;
 };
