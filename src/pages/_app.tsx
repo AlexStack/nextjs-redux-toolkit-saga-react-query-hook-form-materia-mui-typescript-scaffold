@@ -9,7 +9,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistGate } from 'redux-persist/integration/react';
 import { useStore } from 'react-redux';
-import { enableReduxPersist, ReduxStore, reduxWrapper } from '../redux/store';
+import { ReduxStore, reduxWrapper } from '../redux/store';
 import userSlice from '../redux/features/userSlice';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {

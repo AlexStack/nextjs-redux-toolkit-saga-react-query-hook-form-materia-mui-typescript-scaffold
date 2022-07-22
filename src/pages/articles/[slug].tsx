@@ -1,29 +1,26 @@
 import type {
   GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage,
 } from 'next';
-import React, { useEffect } from 'react';
-import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { END } from 'redux-saga';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { reactQueryFn } from '../../apis/article-api';
-import ArticleImageList from '../../components/ArticleImageList';
 import MainLayout from '../../layouts/MainLayout';
 import articleSlice from '../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
-import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
+import { DEFAULT_KEYWORD } from '../../constants/article-const';
 import { mainConfig } from '../../configs/main-config';
-import userSlice from '../../redux/features/userSlice';
 import getIdFromSlug from '../../utils/get-id-from-slug';
 import ArticleDetail from '../../components/ArticleDetail';
 
 const ArticleDetails: NextPage = ({ serverRedux }
 :InferGetStaticPropsType<typeof getStaticProps>) => {
   console.log('🚀 ~ file: [slug].tsx ~ line 19 ~ serverRedux', serverRedux);
-  const router      = useRouter();
-  const articleSlug = getRouterParam(router.query.slug);
-  const articleId   = getIdFromSlug(articleSlug);
+  // const router      = useRouter();
+  // const articleSlug = getRouterParam(router.query.slug);
+  // const articleId   = getIdFromSlug(articleSlug);
 
   const articleDetail = serverRedux?.article.detail;
 

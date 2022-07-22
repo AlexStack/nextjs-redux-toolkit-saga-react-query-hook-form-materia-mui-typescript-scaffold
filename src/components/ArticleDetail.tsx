@@ -23,6 +23,7 @@ interface ExpandMoreProps extends IconButtonProps {
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
+  // eslint-disable-next-line react/jsx-props-no-spreading
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform : !expand ? 'rotate(0deg)' : 'rotate(180deg)',
