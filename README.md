@@ -16,6 +16,7 @@ This is a scaffold for React medium-to-large project.
 
 * MUI design system [Material UI](https://Mui.com/).
 * Translation and i18n [next-translate](https://github.com/vinissimus/next-translate).
+* Date-fns (similar to MomentJs) [date-fns](https://date-fns.org/)
 
 * Typescript [TypeScript](https://www.typescriptlang.org/).
 * Eslint [ESLint](https://eslint.org/).

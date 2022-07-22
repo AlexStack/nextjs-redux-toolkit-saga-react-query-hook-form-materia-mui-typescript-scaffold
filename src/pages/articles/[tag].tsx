@@ -13,16 +13,16 @@ import getRouterParam from '../../utils/get-router-param';
 import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
 import { mainConfig } from '../../configs/main-config';
 
-const Articles: NextPage = (props) => {
+const Articles: NextPage = () => {
   const router = useRouter();
   const tag    = getRouterParam(router.query.tag, DEFAULT_KEYWORD).toLowerCase();
   const page   = parseInt(getRouterParam(router.query.page, '1'), 10);
 
-  // example of Redux usage
+  // Redux usage
   const reduxDispatch = useDispatch();
   const reduxArticle  = useSelector((reduxState: ReduxState) => reduxState.article);
 
-  // example of React Query usage
+  // React Query usage
   const { data:rqDataItems } = useQuery(
     ['articles', { tag, page }],
     reactQueryFn.getArticles,
@@ -31,16 +31,10 @@ const Articles: NextPage = (props) => {
 
   const dataItems = mainConfig.enableReduxForStaticProps ? reduxArticle.lists : rqDataItems;
 
-  console.log(
-    '🚀 ~ file: articles.tsx ~ line 10 ~ props',
-    props,
-    reduxArticle.lists?.length,
-    rqDataItems?.length,
-  );
-
   useEffect(
     () => {
       if (!mainConfig.enableStaticPageDebug) {
+        console.log('🚀 ~ file: [tag].tsx ~ line 37 ~ mainConfig', mainConfig);
         reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
       }
     },
@@ -54,19 +48,6 @@ const Articles: NextPage = (props) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = TOP_MENU_PAGES.map((item: string) => ({
-    params: {
-      tag: item,
-    },
-  }));
-
-  return { paths, fallback: true };
-};
-
-/**
- * Code example: use React Query for server side data fetching
- */
 export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) => {
   const queryClient = new QueryClient();
 
@@ -81,15 +62,10 @@ export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) =
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    // Next.js will attempt to re-generate the page:
-    // - When a request comes in at most once every XXX seconds
-    revalidate: 36000, // 10 hours
+    revalidate: 36000, // re-generate the static page every XXX seconds
   };
 };
 
-/**
- * Code example: use Redux Saga for server side data fetching
- */
 export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticProps(
   (store) => async ({ params }) => {
     const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
@@ -98,23 +74,23 @@ export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticPro
     store.dispatch(END);
     await store.sagaTask.toPromise();
 
-    console.log(
-      '🚀 ~ file: articles.tsx ~ line 39 ~ :store.getState',
-      // params,
-      store.getState(),
-      // rs,
-    );
-
     return {
       props: {
         tag,
       },
-      // Next.js will attempt to re-generate the page:
-      // - When a request comes in at most once every XXX seconds
-      revalidate: 36000, // 10 hours
+      revalidate: 36000, // re-generate the static page every XXX seconds
     };
   },
 );
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const paths = TOP_MENU_PAGES.map((item: string) => ({
+    params: {
+      tag: item,
+    },
+  }));
+  return { paths, fallback: true };
+};
 
 export const getStaticProps = mainConfig.enableReduxForStaticProps
   ? getStaticPropsFromRedux
