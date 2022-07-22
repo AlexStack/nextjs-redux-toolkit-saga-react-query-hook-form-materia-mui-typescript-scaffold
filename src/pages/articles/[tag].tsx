@@ -12,7 +12,7 @@ import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
 import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
 import { mainConfig } from '../../configs/main-config';
-import userSlice from '../../redux/features/userSlice';
+// import userSlice from '../../redux/features/userSlice';
 
 const Articles: NextPage = () => {
   const router = useRouter();
