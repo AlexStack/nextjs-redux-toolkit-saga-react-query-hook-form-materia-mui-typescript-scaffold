@@ -16,6 +16,7 @@ import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
 import { mainConfig } from '../../configs/main-config';
 import userSlice from '../../redux/features/userSlice';
 import getIdFromSlug from '../../utils/get-id-from-slug';
+import ArticleDetail from '../../components/ArticleDetail';
 
 const ArticleDetails: NextPage = ({ serverRedux }
 :InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -51,14 +52,7 @@ const ArticleDetails: NextPage = ({ serverRedux }
 
   return (
     <MainLayout>
-      sss
-      {articleDetail?.id}
-      {' '}
-      --
-      {' '}
-      {articleDetail?.description}
-      {' '}
-      {articleDetail?.title}
+      {articleDetail && <ArticleDetail article={articleDetail} />}
     </MainLayout>
   );
 };

@@ -6,7 +6,7 @@ export interface Article {
   cover_image: string;
   readable_publish_date: string;
   social_image: string;
-  tag_list: string[];
+  tag_list: string[] | string;
   slug: string;
   url: string;
   canonical_url: string;

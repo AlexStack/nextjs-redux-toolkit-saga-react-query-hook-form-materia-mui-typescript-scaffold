@@ -23,60 +23,55 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     [reduxStore],
   );
 
-  return enableReduxPersist ? (
-    <PersistGate
-      loading={null}
-      persistor={(reduxStore as ReduxStore).reduxPersistData}
-    >
-      <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <Component {...pageProps} />
-        </Hydrate>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-
-    </PersistGate>
-  ) : (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <Component {...pageProps} />
-      </Hydrate>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  );
-
-  // return (
+  // return enableReduxPersist ? (
   //   <PersistGate
   //     loading={null}
   //     persistor={(reduxStore as ReduxStore).reduxPersistData}
   //   >
-  //     {() => (
-  //       <QueryClientProvider client={queryClient}>
+  //     <QueryClientProvider client={queryClient}>
+  //       <Hydrate state={pageProps.dehydratedState}>
+  //         <Component {...pageProps} />
+  //       </Hydrate>
+  //       <ReactQueryDevtools initialIsOpen={false} />
+  //     </QueryClientProvider>
 
-  //         <Hydrate state={pageProps.dehydratedState}>
-  //           {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-  //           <Component {...pageProps} />
-  //         </Hydrate>
-
-  //         <ReactQueryDevtools initialIsOpen={false} />
-
-  //       </QueryClientProvider>
-  //     )}
   //   </PersistGate>
-  // );
-
-  // return (
-
+  // ) : (
   //   <QueryClientProvider client={queryClient}>
-
   //     <Hydrate state={pageProps.dehydratedState}>
   //       <Component {...pageProps} />
   //     </Hydrate>
-
   //     <ReactQueryDevtools initialIsOpen={false} />
-
   //   </QueryClientProvider>
+  // );
 
+  return (
+    <PersistGate
+      loading={null}
+      persistor={(reduxStore as ReduxStore).reduxPersistData}
+    >
+      {() => (
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+          </Hydrate>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      )}
+    </PersistGate>
+  );
+
+  /**
+   * uncomment the below if you want to disable redux persist
+   */
+
+  // return (
+  //   <QueryClientProvider client={queryClient}>
+  //     <Hydrate state={pageProps.dehydratedState}>
+  //       <Component {...pageProps} />
+  //     </Hydrate>
+  //     <ReactQueryDevtools initialIsOpen={false} />
+  //   </QueryClientProvider>
   // );
 };
 
