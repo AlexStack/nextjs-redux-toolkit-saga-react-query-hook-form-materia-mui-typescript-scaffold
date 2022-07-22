@@ -9,7 +9,7 @@ interface ReactQueryFnProps<T> {
 export const getArticles = async ({ tag = 'react', page = 1 }:ArticleFilterParams):Promise<Article[]> => {
   const apiEndpoint = `${BASE_API_URI}/articles?tag=${tag}&page=${page}`;
   const response    = await axios.get(apiEndpoint);
-  console.log('🚀 ~ file: article-api.ts ~ line 12 ~ getArticles ~ apiEndpoint', apiEndpoint);
+  // console.log('🚀 ~ file: article-api.ts ~ line 12 ~ getArticles ~ apiEndpoint', apiEndpoint);
   return response.data;
 };
 

@@ -16,11 +16,18 @@ const sliceReducer =  {
 };
 
 const rootReducer = (state: any, action: AnyAction): CombinedState<ReducerState> => {
+  // Doc: https://github.com/kirill-konshin/next-redux-wrapper#state-reconciliation-during-hydration
   if (action.type === HYDRATE) {
-    return {
-      ...state,
-      ...action.payload,
+    console.log('🚀 ~ file: reducer.ts ~ line 20 ~ rootReducer', action, state);
+
+    const nextState = {
+      ...state, // use previous state
+      ...action.payload, // apply delta from hydration
     };
+
+    nextState.user = state.user; // preserve user data on client side navigation
+
+    return nextState;
   }
 
   return combineReducers(sliceReducer)(state, action);
