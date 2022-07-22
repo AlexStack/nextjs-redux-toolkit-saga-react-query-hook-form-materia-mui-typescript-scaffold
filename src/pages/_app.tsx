@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import {
@@ -22,54 +23,61 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     [reduxStore],
   );
 
-  // return enableReduxPersist ? (
+  return enableReduxPersist ? (
+    <PersistGate
+      loading={null}
+      persistor={(reduxStore as ReduxStore).reduxPersistData}
+    >
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <Component {...pageProps} />
+        </Hydrate>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+
+    </PersistGate>
+  ) : (
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <Component {...pageProps} />
+      </Hydrate>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+
+  // return (
   //   <PersistGate
   //     loading={null}
   //     persistor={(reduxStore as ReduxStore).reduxPersistData}
   //   >
-  //     <QueryClientProvider client={queryClient}>
+  //     {() => (
+  //       <QueryClientProvider client={queryClient}>
 
-  //       <Hydrate state={pageProps.dehydratedState}>
-  //         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-  //         <Component {...pageProps} />
-  //       </Hydrate>
+  //         <Hydrate state={pageProps.dehydratedState}>
+  //           {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+  //           <Component {...pageProps} />
+  //         </Hydrate>
 
-  //       <ReactQueryDevtools initialIsOpen={false} />
+  //         <ReactQueryDevtools initialIsOpen={false} />
 
-  //     </QueryClientProvider>
+  //       </QueryClientProvider>
+  //     )}
   //   </PersistGate>
-  // ) : (
+  // );
+
+  // return (
+
   //   <QueryClientProvider client={queryClient}>
 
   //     <Hydrate state={pageProps.dehydratedState}>
-  //       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
   //       <Component {...pageProps} />
   //     </Hydrate>
 
   //     <ReactQueryDevtools initialIsOpen={false} />
 
   //   </QueryClientProvider>
+
   // );
-
-  return (
-    <PersistGate
-      loading={null}
-      persistor={(reduxStore as ReduxStore).reduxPersistData}
-    >
-      {() => (
-        <QueryClientProvider client={queryClient}>
-
-          <Hydrate state={pageProps.dehydratedState}>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <Component {...pageProps} />
-          </Hydrate>
-
-          <ReactQueryDevtools initialIsOpen={false} />
-
-        </QueryClientProvider>
-      )}
-    </PersistGate>
-  );
 };
 
 export default reduxWrapper.withRedux(MyApp);

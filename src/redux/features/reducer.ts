@@ -28,9 +28,9 @@ const rootReducer = (state: any, action: AnyAction): CombinedState<ReducerState>
 
     nextState.user = state.user; // preserve user data on client side navigation
 
-    if (mainConfig.isClientSide) {
-      nextState.article = state.article;
-    }
+    // if (mainConfig.isClientSide) {
+    //   nextState.article = state.article;
+    // }
 
     return nextState;
   }

@@ -63,7 +63,7 @@ export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) =
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 36000, // re-generate the static page every XXX seconds
+    revalidate: 36000,
   };
 };
 
@@ -79,7 +79,7 @@ export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticPro
       props: {
         tag,
       },
-      revalidate: 36000, // re-generate the static page every XXX seconds
+      revalidate: 36000,
     };
   },
 );
