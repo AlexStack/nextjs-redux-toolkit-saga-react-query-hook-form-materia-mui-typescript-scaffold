@@ -11,12 +11,13 @@ import rootReducer from './features/reducer';
 
 export interface SagaStore extends Store {
   sagaTask: Task;
-  reduxPersistData: Persistor;
+  reduxPersistData: Persistor | null;
 }
 
 let newRootReducer = rootReducer;
 
-const enableReduxPersist = mainConfig.reduxPersistConfigs.enabled && mainConfig.isClientSide;
+export const enableReduxPersist = mainConfig.reduxPersistConfigs.enabled && mainConfig.isClientSide;
+
 if (enableReduxPersist) {
   newRootReducer = persistReducer({
     ...mainConfig.reduxPersistConfigs,
@@ -36,7 +37,7 @@ const createReduxStore = ():SagaStore => {
 
   (store as SagaStore).reduxPersistData = enableReduxPersist
     ? persistStore(store)
-    : persistStore(store); // todo: don't persist on server side
+    : null;
 
   return store as SagaStore;
 };

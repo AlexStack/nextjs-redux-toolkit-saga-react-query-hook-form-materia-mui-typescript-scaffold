@@ -1,6 +1,7 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { combineReducers } from '@reduxjs/toolkit';
 import type { AnyAction, CombinedState } from '@reduxjs/toolkit';
+import { mainConfig } from '../../configs/main-config';
 
 import userSlice from './userSlice';
 import articleSlice from './articleSlice';
@@ -18,7 +19,7 @@ const sliceReducer =  {
 const rootReducer = (state: any, action: AnyAction): CombinedState<ReducerState> => {
   // Doc: https://github.com/kirill-konshin/next-redux-wrapper#state-reconciliation-during-hydration
   if (action.type === HYDRATE) {
-    console.log('🚀 ~ file: reducer.ts ~ line 20 ~ rootReducer', action, state);
+    console.log('🚀 ~ file: reducer.ts ~ line 20 ~ from hydration', action, mainConfig.isClientSide, state);
 
     const nextState = {
       ...state, // use previous state
@@ -26,6 +27,10 @@ const rootReducer = (state: any, action: AnyAction): CombinedState<ReducerState>
     };
 
     nextState.user = state.user; // preserve user data on client side navigation
+
+    if (mainConfig.isClientSide) {
+      nextState.article = state.article;
+    }
 
     return nextState;
   }

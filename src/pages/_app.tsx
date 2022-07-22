@@ -8,7 +8,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistGate } from 'redux-persist/integration/react';
 import { useStore } from 'react-redux';
-import { ReduxStore, reduxWrapper } from '../redux/store';
+import { enableReduxPersist, ReduxStore, reduxWrapper } from '../redux/store';
 import userSlice from '../redux/features/userSlice';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -22,9 +22,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     [reduxStore],
   );
 
-  return (
+  return enableReduxPersist ? (
     <PersistGate
-      loading={<div>Loading...</div>}
+      loading={null}
       persistor={(reduxStore as ReduxStore).reduxPersistData}
     >
       <QueryClientProvider client={queryClient}>
@@ -38,7 +38,36 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
       </QueryClientProvider>
     </PersistGate>
+  ) : (
+    <QueryClientProvider client={queryClient}>
+
+      <Hydrate state={pageProps.dehydratedState}>
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <Component {...pageProps} />
+      </Hydrate>
+
+      <ReactQueryDevtools initialIsOpen={false} />
+
+    </QueryClientProvider>
   );
+
+  // return (
+  //   <PersistGate
+  //     loading={null}
+  //     persistor={(reduxStore as ReduxStore).reduxPersistData}
+  //   >
+  //     <QueryClientProvider client={queryClient}>
+
+  //       <Hydrate state={pageProps.dehydratedState}>
+  //         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+  //         <Component {...pageProps} />
+  //       </Hydrate>
+
+  //       <ReactQueryDevtools initialIsOpen={false} />
+
+  //     </QueryClientProvider>
+  //   </PersistGate>
+  // );
 };
 
 export default reduxWrapper.withRedux(MyApp);

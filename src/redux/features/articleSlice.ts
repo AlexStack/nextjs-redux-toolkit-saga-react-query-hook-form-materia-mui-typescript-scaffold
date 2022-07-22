@@ -3,6 +3,7 @@ import { Article } from '../../types/article-types';
 
 interface ArticleSliceType {
   lists: Article[];
+  detail: Article | null;
   status: 'loading' | 'loaded' | 'error' | '';
   message?: string;
 }
@@ -10,6 +11,7 @@ interface ArticleSliceType {
 const initialState: ArticleSliceType = {
   lists : [],
   status: '',
+  detail: null,
 };
 
 const articleSlice = createSlice({
@@ -29,6 +31,14 @@ const articleSlice = createSlice({
       // eslint-disable-next-line no-multi-spaces
       state.status  = 'error';
       state.message = action.payload;
+    },
+    getArticleDetailRequest: (state, action: PayloadAction<{ id:number }>) => {
+      state.detail = state.lists.find((article) => article.id === action.payload.id) || null;
+      state.status = 'loading';
+    },
+    getArticleDetailSuccess: (state, action: PayloadAction<Article>) => {
+      state.detail = action.payload;
+      state.status = 'loaded';
     },
   },
 });

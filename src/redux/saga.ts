@@ -17,6 +17,16 @@ export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
   }
 }
 
+export function* fetchArticleDetail(action: PayloadAction<{ id: number }>) {
+  try {
+    const response:Article = yield call(() => articleApi.getArticleDetail(action.payload));
+
+    yield put(articleSlice.actions.getArticleDetailSuccess(response));
+  } catch (e: any) {
+    // yield put(articleSlice.actions.getArticleDetailFailure(e.message));
+  }
+}
+
 // export function* fetchNumberSaga() {
 //   try {
 //     let result = yield call(() =>
@@ -32,6 +42,7 @@ export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
 
 export default function* rootSaga() {
   yield takeLatest(articleSlice.actions.getArticlesRequest, fetchArticles);
+  yield takeLatest(articleSlice.actions.getArticleDetailRequest, fetchArticleDetail);
 
   // yield takeLatest(userSlice.actions.visit, fetchNumberSaga)
 }

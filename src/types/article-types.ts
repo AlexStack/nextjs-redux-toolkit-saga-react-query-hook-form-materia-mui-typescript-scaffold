@@ -16,7 +16,8 @@ export interface Article {
   collection_id: null;
   created_at: string;
   edited_at: string;
-  crossposted_at: null;
+  body_html?: string;
+  tags?: string[];
   published_at: string;
   last_comment_at: string;
   published_timestamp: string;
@@ -35,4 +36,8 @@ export interface Article {
 export interface ArticleFilterParams {
   tag?: string;
   page?: number;
+}
+
+export interface ArticleDetailParams {
+  id: number;
 }

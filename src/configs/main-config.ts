@@ -13,7 +13,7 @@ export const mainConfig = {
   // Redux PersistConfig props
   // set enabled to false can disable persist (requires remove PersistGate in _app.tx)
   reduxPersistConfigs: {
-    key: 'AlexAppData', version: 1, debug: isDevEnv, enabled: true,
+    key: 'AlexAppData', version: 1, debug: isDevEnv, enabled: false,
   },
 
   // is dev env, we can force it to true to debug -> isDevEnv:true

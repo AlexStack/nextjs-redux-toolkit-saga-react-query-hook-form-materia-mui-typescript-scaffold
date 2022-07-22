@@ -4,15 +4,15 @@ import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import { useRouter } from 'next/router';
-import { reactQueryFn } from '../../apis/article-api';
-import ArticleImageList from '../../components/ArticleImageList';
-import MainLayout from '../../layouts/MainLayout';
-import articleSlice from '../../redux/features/articleSlice';
-import { ReduxState, reduxWrapper } from '../../redux/store';
-import getRouterParam from '../../utils/get-router-param';
-import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../constants/article-const';
-import { mainConfig } from '../../configs/main-config';
-// import userSlice from '../../redux/features/userSlice';
+import { reactQueryFn } from '../../../apis/article-api';
+import ArticleImageList from '../../../components/ArticleImageList';
+import MainLayout from '../../../layouts/MainLayout';
+import articleSlice from '../../../redux/features/articleSlice';
+import { ReduxState, reduxWrapper } from '../../../redux/store';
+import getRouterParam from '../../../utils/get-router-param';
+import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../../constants/article-const';
+import { mainConfig } from '../../../configs/main-config';
+import userSlice from '../../../redux/features/userSlice';
 
 const Articles: NextPage = () => {
   const router = useRouter();
@@ -37,7 +37,7 @@ const Articles: NextPage = () => {
       if (!mainConfig.enableStaticPageDebug) {
         reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
       }
-      // reduxDispatch(userSlice.actions.visitRequest());
+      reduxDispatch(userSlice.actions.visitRequest());
     },
     [page, reduxDispatch, tag],
   );
