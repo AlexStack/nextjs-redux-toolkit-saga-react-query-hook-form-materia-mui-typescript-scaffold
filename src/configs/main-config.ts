@@ -4,7 +4,7 @@ const isClientSide = typeof window !== 'undefined';
 export const mainConfig = {
   // set to true will not fetch the dynamic data from the client side
   // then we can see what's the NextJs static pages looks like - for SEO
-  enableStaticPageDebug: true,
+  enableStaticPageDebug: false,
 
   // set to false will use React Query for getStaticProps instead of use Redux
   // client side still check ReduxState first, then use React Query
@@ -15,6 +15,9 @@ export const mainConfig = {
   reduxPersistConfigs: {
     key: 'AlexAppData', version: 0.1, debug: isDevEnv, enabled: true,
   },
+
+  // max number of recent visited articles to save in local storage
+  maxRecentItems: 40,
 
   // article list page re-generate every xxx seconds
   listPageRefreshInterval: 3600 * 5,

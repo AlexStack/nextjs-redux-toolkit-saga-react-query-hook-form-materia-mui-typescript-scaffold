@@ -1,5 +1,21 @@
+export interface ArticleFilterParams {
+  tag?: string;
+  page?: number;
+}
+
+export interface ArticleDetailParams {
+  id: number;
+}
+
+export interface FavoriteItem
+  extends Pick<Article, 'id' | 'title' | 'description' | 'tags' | 'cover_image' | 'slug' | 'published_at'> {
+  visited_at: string;
+  favorite_at?: string;
+  author: string;
+  author_avatar: string;
+}
+
 export interface Article {
-  type_of: 'article';
   id: number;
   title: string;
   description: string;
@@ -31,13 +47,4 @@ export interface Article {
     profile_image: string;
     profile_image_90: string;
   };
-}
-
-export interface ArticleFilterParams {
-  tag?: string;
-  page?: number;
-}
-
-export interface ArticleDetailParams {
-  id: number;
 }

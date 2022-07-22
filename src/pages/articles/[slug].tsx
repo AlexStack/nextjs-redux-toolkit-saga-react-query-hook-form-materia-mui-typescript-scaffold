@@ -1,9 +1,11 @@
 import type {
   GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage,
 } from 'next';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { END } from 'redux-saga';
+import { useDispatch } from 'react-redux';
+import { useEffectOnce } from 'react-use';
 import { reactQueryFn } from '../../apis/article-api';
 import MainLayout from '../../layouts/MainLayout';
 import articleSlice from '../../redux/features/articleSlice';
@@ -12,6 +14,7 @@ import getRouterParam from '../../utils/get-router-param';
 import { mainConfig } from '../../configs/main-config';
 import getIdFromSlug from '../../utils/get-id-from-slug';
 import ArticleDetail from '../../components/ArticleDetail';
+import userSlice from '../../redux/features/userSlice';
 
 const ArticleDetails: NextPage = ({
   serverRedux,
@@ -26,7 +29,7 @@ const ArticleDetails: NextPage = ({
   // const articleDetail = serverRedux?.article.detail;
 
   // // Redux usage
-  // const reduxDispatch = useDispatch();
+  const reduxDispatch = useDispatch();
   // const reduxArticle = useSelector((reduxState: ReduxState) => reduxState.article);
 
   // // React Query usage
@@ -40,15 +43,13 @@ const ArticleDetails: NextPage = ({
     ? serverRedux?.article.detail
     : reactQueryData;
 
-  // useEffect(
-  //   () => {
-  //     if (!mainConfig.enableStaticPageDebug) {
-  //       reduxDispatch(articleSlice.actions.getArticleDetailRequest({ tag, page }));
-  //     }
-  //     reduxDispatch(userSlice.actions.visitRequest());
-  //   },
-  //   [page, reduxDispatch, tag],
-  // );
+  useEffectOnce(
+    () => {
+      if (!mainConfig.enableStaticPageDebug && mainConfig.isClientSide && articleDetail?.id > 0) {
+        reduxDispatch(userSlice.actions.recentItemRequest(articleDetail));
+      }
+    },
+  );
 
   return (
     <MainLayout>
