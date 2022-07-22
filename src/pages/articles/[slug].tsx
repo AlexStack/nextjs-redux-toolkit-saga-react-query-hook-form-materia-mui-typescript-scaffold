@@ -2,40 +2,43 @@ import type {
   GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage,
 } from 'next';
 import React from 'react';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { END } from 'redux-saga';
-// import { useRouter } from 'next/router';
 import { reactQueryFn } from '../../apis/article-api';
 import MainLayout from '../../layouts/MainLayout';
 import articleSlice from '../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../redux/store';
 import getRouterParam from '../../utils/get-router-param';
-import { DEFAULT_KEYWORD } from '../../constants/article-const';
 import { mainConfig } from '../../configs/main-config';
 import getIdFromSlug from '../../utils/get-id-from-slug';
 import ArticleDetail from '../../components/ArticleDetail';
 
-const ArticleDetails: NextPage = ({ serverRedux }
+const ArticleDetails: NextPage = ({
+  serverRedux,
+  articleId,
+}
 :InferGetStaticPropsType<typeof getStaticProps>) => {
-  console.log('🚀 ~ file: [slug].tsx ~ line 19 ~ serverRedux', serverRedux);
+  console.log('🚀 ~ file: [slug].tsx ~ line 19 ~ serverRedux', serverRedux, mainConfig);
   // const router      = useRouter();
   // const articleSlug = getRouterParam(router.query.slug);
-  // const articleId   = getIdFromSlug(articleSlug);
+  // const articleId   = getIdFromSlug(articleSlug) || 0;
 
-  const articleDetail = serverRedux?.article.detail;
+  // const articleDetail = serverRedux?.article.detail;
 
   // // Redux usage
   // const reduxDispatch = useDispatch();
   // const reduxArticle = useSelector((reduxState: ReduxState) => reduxState.article);
 
   // // React Query usage
-  // const { data:rqDataItems } = useQuery(
-  //   ['articles', { tag, page }],
-  //   reactQueryFn.getArticles,
-  //   { enabled: !mainConfig.enableReduxForStaticProps },
-  // );
+  const { data:reactQueryData } = useQuery(
+    ['articles', { id: articleId }],
+    reactQueryFn.getArticleDetail,
+    { enabled: !mainConfig.enableReduxForStaticProps && articleId > 0 },
+  );
 
-  // const dataItems = mainConfig.enableReduxForStaticProps ? reduxArticle.lists : rqDataItems;
+  const articleDetail = mainConfig.enableReduxForStaticProps
+    ? serverRedux?.article.detail
+    : reactQueryData;
 
   // useEffect(
   //   () => {
@@ -57,25 +60,25 @@ const ArticleDetails: NextPage = ({ serverRedux }
 export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) => {
   const queryClient = new QueryClient();
 
-  const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
+  const articleId = getIdFromSlug(getRouterParam(params?.slug)) || 0;
 
   await queryClient.prefetchQuery(
-    ['articles', { page: 1, tag }],
-    reactQueryFn.getArticles,
+    ['articles', { id: articleId }],
+    reactQueryFn.getArticleDetail,
   );
 
   return {
     props: {
+      articleId,
       dehydratedState: dehydrate(queryClient),
     },
-    revalidate: 36000, // re-generate the static page every XXX seconds
+    revalidate: mainConfig.detailPageRefreshInterval,
   };
 };
 
 export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticProps(
   (store) => async ({ params }) => {
-    const articleSlug = getRouterParam(params?.slug);
-    const articleId   = getIdFromSlug(articleSlug) || 0;
+    const articleId = getIdFromSlug(getRouterParam(params?.slug)) || 0;
 
     store.dispatch(articleSlice.actions.getArticleDetailRequest({ id: articleId }));
     store.dispatch(END);
@@ -84,11 +87,10 @@ export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticPro
     return {
       props: {
         articleId,
-        slug       : articleSlug,
         serverRedux: store.getState() as ReduxState,
       },
-      revalidate: 36000,
-      notFound  : !articleId,
+      revalidate: mainConfig.detailPageRefreshInterval,
+      notFound  : articleId < 1,
     };
   },
 );

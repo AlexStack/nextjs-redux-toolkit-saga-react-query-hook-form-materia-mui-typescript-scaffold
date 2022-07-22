@@ -16,6 +16,7 @@ export const getArticles = async ({ tag = 'react', page = 1 }:ArticleFilterParam
 export const getArticleDetail = async ({ id }:ArticleDetailParams):Promise<Article> => {
   const apiEndpoint = `${BASE_API_URI}/articles/${id}`;
   const response    = await axios.get(apiEndpoint);
+  console.log('🚀 ~ file: article-api.ts ~ line 19 ~ getArticleDetail ~ apiEndpoint', apiEndpoint);
   return response.data;
 };
 
