@@ -1,7 +1,7 @@
 import type {
   GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage,
 } from 'next';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import { END } from 'redux-saga';
 import { useDispatch } from 'react-redux';
