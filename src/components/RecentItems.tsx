@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  IconButton, Divider, List, ListItem,
-  ListItemAvatar, ListItemText, Typography, Breadcrumbs, Button, Tooltip, Alert, Snackbar,
+  IconButton, Divider, List, ListItem, Avatar,
+  ListItemAvatar, ListItemText, Typography, Breadcrumbs, Button, Tooltip,
 } from '@mui/material';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,173 +9,178 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Image from 'next/image';
-import type { FavoriteItem, UserSliceType } from '../types/article-types';
+import type { ChildrenProps, FavoriteItem, UserSliceType } from '../types/article-types';
 import { getArticleLink } from '../helpers/article-helper';
 import { ReduxState } from '../redux/store';
 import userSlice from '../redux/features/userSlice';
+import ActionToaster from './ActionToaster';
 
-const RecentItems = () => {
-  const reduxDispatch = useDispatch();
+export const PageBreadcrumbs = ({ children }:ChildrenProps) => (
+  <Breadcrumbs aria-label="breadcrumb">
+    <Link href="/">
+      <Button variant="text" startIcon={<HomeIcon />}>
+        Home
+      </Button>
+    </Link>
+    <Link href="/">
+      <Button variant="text" startIcon={<PersonIcon />}>
+        User
+      </Button>
+    </Link>
+    <Typography
+      sx={{ display: 'flex', alignItems: 'center' }}
+      color="text.primary"
+    >
+      {children}
+    </Typography>
+  </Breadcrumbs>
+);
 
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+interface PageListItemsProps {
+  dataItems:FavoriteItem[];
+  onClickFavorite:(item:FavoriteItem) => void;
+  allFavoriteItems?:FavoriteItem[];
+  isRecentPage:boolean;
+}
 
-  const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
+export const PageListItems = ({
+  dataItems, onClickFavorite, allFavoriteItems, isRecentPage,
+}:PageListItemsProps) => (
+  <>
+    <Typography
+      variant="h1"
+      component="div"
+      gutterBottom
+      align="center"
+      sx={{ fontSize: '3rem', fontWeight: 700 }}
+    >
+      {isRecentPage ? 'Recent Viewed Articles' : 'My Favorites'}
+    </Typography>
+    <List sx={{
+      width: '100%', maxWidth: 1000, marginTop: 5, bgColor: 'background.paper',
+    }}
+    >
+      {dataItems && dataItems.map((item) => {
+        const isFavorite = allFavoriteItems
+          ? allFavoriteItems.some((f) => item.id === f.id) : false;
 
-  const dataItems = reduxUserData.recentItems;
+        const favoritePageToolTipText = 'Remove it from my favorites';
+        const recentPageToolTipText   = isFavorite ? favoritePageToolTipText : 'Favorite it!';
 
-  const onClickFavorite = (item: FavoriteItem) => {
-    reduxDispatch(userSlice.actions.favoriteItemRequest(item));
-    setOpenSnackbar(true);
-  };
+        const toolTipText = isRecentPage ? recentPageToolTipText : favoritePageToolTipText;
 
-  const onCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenSnackbar(false);
-  };
-
-  return (
-    <>
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link
-          color="inherit"
-          href="/"
-        >
-          <Button variant="text" startIcon={<HomeIcon />}>
-            Home
-          </Button>
-        </Link>
-        <Link
-          color="inherit"
-          href="/material-ui/getting-started/installation/"
-        >
-          <Button variant="text" startIcon={<PersonIcon />}>
-            User
-          </Button>
-
-        </Link>
-        <Typography
-          sx={{ display: 'flex', alignItems: 'center' }}
-          color="text.primary"
-        >
-          <Button variant="text" startIcon={<RestoreIcon />}>
-            Recent viewed
-          </Button>
-
-        </Typography>
-      </Breadcrumbs>
-
-      <Typography
-        variant="h1"
-        component="div"
-        gutterBottom
-        align="center"
-        sx={{ fontSize: '3rem', fontWeight: 700 }}
-      >
-        Recent Viewed Articles
-      </Typography>
-
-      <List sx={{
-        width: '100%', maxWidth: 1000, marginTop: 5, bgcolor: 'background.paper',
-      }}
-      >
-        {dataItems && dataItems.map((item) => {
-          const isFavorite = reduxUserData.favoriteItems.some((f) => item.id === f.id);
-
-          return (
-            <>
-              <ListItem
-                alignItems="flex-start"
-                secondaryAction={(
-                  <Tooltip
-                    title={isFavorite ? 'Remove it from my favorites' : 'Favorite it!'}
-                    placement="left"
+        return (
+          <>
+            <ListItem
+              alignItems="flex-start"
+              secondaryAction={(
+                <Tooltip title={toolTipText} placement="left">
+                  <IconButton
+                    edge="end"
+                    color={isFavorite ? 'error' : 'default'}
+                    onClick={() => onClickFavorite(item)}
                   >
-                    <IconButton
-                      edge="end"
-                      color={isFavorite ? 'error' : 'default'}
-                      onClick={() => onClickFavorite(item)}
-                    >
-                      <FavoriteIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
-                key={item.id}
-              >
-
-                <ListItemAvatar sx={{ paddingRight: '1rem' }}>
+                    { isRecentPage ? <FavoriteIcon /> : <DeleteIcon />}
+                  </IconButton>
+                </Tooltip>
+              )}
+              key={item.id}
+            >
+              <ListItemAvatar sx={{ paddingRight: '1rem' }}>
+                { isRecentPage ? (
                   <Image
                     src={item.cover_image}
                     alt={item.author}
                     width={150}
                     height={80}
                   />
-                </ListItemAvatar>
-                <Link href={getArticleLink(item)}>
-                  <ListItemText
-                    primary={<Typography variant="h6">{item.title}</Typography>}
-                    sx={{ cursor: 'pointer' }}
-                    secondary={(
-                      <>
-                        <Typography
-                          sx={{ display: 'inline', paddingRight: '0.5rem' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {item.author}
-                        </Typography>
-                        Viewed at:
-                        <Typography
-                          sx={{ display: 'inline', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
+                ) : (
+                  <Avatar alt={item.author} src={item.author_avatar} />
+                )}
+              </ListItemAvatar>
+              <Link href={getArticleLink(item)}>
+                <ListItemText
+                  primary={<Typography variant="h6">{item.title}</Typography>}
+                  sx={{ cursor: 'pointer' }}
+                  secondary={(
+                    <>
+                      <Typography
+                        sx={{ display: 'inline', paddingRight: '0.5rem' }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {item.author}
+                      </Typography>
+                      {isRecentPage ? 'Viewed at:' : 'Favorite at:'}
+                      <Typography
+                        sx={{ display: 'inline', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {isRecentPage ? item.visited_at : item.favorite_at}
+                      </Typography>
+                      Tags:
+                      <Typography
+                        sx={{ display: 'inline', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {item.tags?.join(',')}
+                      </Typography>
+                      <Typography
+                        sx={{ display: 'block' }}
+                        component="span"
+                        variant="body2"
+                        color="text.secondary"
+                      >
+                        {item.description}
+                      </Typography>
+                    </>
+                  )}
+                />
+              </Link>
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </>
+        );
+      })}
+    </List>
+  </>
+);
 
-                          {item.visited_at}
-                        </Typography>
-                        Tags:
-                        <Typography
-                          sx={{ display: 'inline', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
-                          {item.tags?.join(',')}
-                        </Typography>
-                        <Typography
-                          sx={{ display: 'block' }}
-                          component="span"
-                          variant="body2"
-                          color="text.secondary"
-                        >
-                          {item.description}
-                        </Typography>
-                      </>
-                    )}
-                  />
-                </Link>
-              </ListItem>
-              <Divider variant="inset" component="li" />
+const RecentItems = () => {
+  const reduxDispatch = useDispatch();
 
-            </>
-          );
-        })}
+  const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
 
-      </List>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={onCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={onCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-          Action performed successfully!
-        </Alert>
-      </Snackbar>
+  const dataItems = reduxUserData.recentItems;
+
+  const [showToaster, setShowToaster] = React.useState(false);
+
+  const onClickFavorite = (item: FavoriteItem) => {
+    reduxDispatch(userSlice.actions.favoriteItemRequest(item));
+    setShowToaster(true);
+  };
+
+  return (
+    <>
+      <PageBreadcrumbs>
+        <Button variant="text" startIcon={<RestoreIcon />}>Recent viewed</Button>
+      </PageBreadcrumbs>
+
+      <PageListItems
+        dataItems={dataItems}
+        onClickFavorite={onClickFavorite}
+        allFavoriteItems={reduxUserData.favoriteItems}
+        isRecentPage
+      />
+
+      <ActionToaster showToaster={showToaster} setShowToaster={setShowToaster} />
     </>
   );
 };

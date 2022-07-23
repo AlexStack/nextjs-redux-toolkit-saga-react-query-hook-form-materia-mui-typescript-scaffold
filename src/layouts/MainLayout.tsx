@@ -5,10 +5,10 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import MainHeader from './MainHeader';
 import MainFooter from './MainFooter';
+import { ChildrenProps } from '../types/article-types';
 
-interface Props {
+interface Props extends ChildrenProps {
   title?: string;
-  children: React.ReactNode;
 }
 
 const MainLayout = ({ title = '', children }: Props) => (

@@ -50,6 +50,10 @@ export interface Article {
   };
 }
 
+export interface ChildrenProps {
+  children:React.ReactNode;
+}
+
 // redux slice types
 export interface UserSliceType {
   identityToken: string;
