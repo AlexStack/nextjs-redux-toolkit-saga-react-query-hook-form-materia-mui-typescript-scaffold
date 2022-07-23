@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  IconButton, Divider, List, ListItem, Avatar,
-  ListItemAvatar, ListItemText, Typography, Breadcrumbs, Button, Tooltip,
+  IconButton, Divider, List, ListItem, Avatar, Tooltip, styled,
+  ListItemAvatar, ListItemText, Typography, Breadcrumbs, Button,
 } from '@mui/material';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,12 @@ import { getArticleLink } from '../helpers/article-helper';
 import { ReduxState } from '../redux/store';
 import userSlice from '../redux/features/userSlice';
 import ActionToaster from './ActionToaster';
+
+const StyledList = styled(List)({
+  '& .MuiListItem-root:hover': {
+    backgroundColor: '#f1ebeb',
+  },
+});
 
 export const PageBreadcrumbs = ({ children }:ChildrenProps) => (
   <Breadcrumbs aria-label="breadcrumb">
@@ -58,7 +64,7 @@ export const PageListItems = ({
     >
       {isRecentPage ? 'Recent Viewed Articles' : 'My Favorites'}
     </Typography>
-    <List sx={{
+    <StyledList sx={{
       width: '100%', maxWidth: 1000, marginTop: 5, bgColor: 'background.paper',
     }}
     >
@@ -149,7 +155,7 @@ export const PageListItems = ({
           </>
         );
       })}
-    </List>
+    </StyledList>
   </>
 );
 
