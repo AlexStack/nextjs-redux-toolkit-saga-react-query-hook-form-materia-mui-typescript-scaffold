@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { Box, Fab, Tooltip } from '@mui/material';
 import { Article, UserSliceType } from '../types/article-types';
 import { getArticleImgUrl } from '../helpers/article-helper';
 import userSlice from '../redux/features/userSlice';
@@ -120,6 +121,34 @@ const ArticleDetail = ({ article }:Props) => {
           </Typography>
         </CardContent>
       </Collapse>
+      <Fab
+        aria-label="like"
+        sx={{
+          position: 'fixed',
+          bottom  : (theme) => theme.spacing(5),
+          right   : (theme) => theme.spacing(5),
+        }}
+        color={isFavorite ? 'error' : 'default'}
+        onClick={onClickFavorite}
+      >
+        <Tooltip
+          title={isFavorite ? 'Remove this article from my favorites' : 'Favorite this article!'}
+          placement="left"
+          PopperProps={{
+            modifiers: [
+              {
+                name   : 'offset',
+                options: {
+                  offset: [0, 10],
+                },
+              },
+            ],
+          }}
+        >
+          <FavoriteIcon />
+        </Tooltip>
+      </Fab>
+
     </Card>
   );
 };
