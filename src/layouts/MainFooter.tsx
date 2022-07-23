@@ -4,23 +4,42 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import HomeIcon from '@mui/icons-material/Home';
+import styled from '@emotion/styled';
+import router from 'next/router';
 
 const MainFooter = () => {
-  const [value, setValue] = React.useState(0);
+  const StyledBottomNavigationAction = styled(BottomNavigationAction)(`
+    color: #7e235a;
+    &.Mui-selected {
+      color: red;
+    };
+  `);
+
+  const onIconClick = (url:string) => {
+    router.push(url);
+  };
 
   return (
     <Box sx={{ width: 500 }}>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-      >
-        <BottomNavigationAction label="Recents" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Favorites" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Nearby" icon={<LocationOnIcon />} />
+      <BottomNavigation showLabels>
+
+        <BottomNavigationAction
+          label="Home"
+          icon={<HomeIcon />}
+          onClick={() => onIconClick('/')}
+        />
+        <StyledBottomNavigationAction
+          label="Favorites"
+          icon={<FavoriteIcon />}
+          onClick={() => onIconClick('/user/favorite')}
+        />
+        <BottomNavigationAction
+          label="Recent View"
+          icon={<RestoreIcon />}
+          onClick={() => onIconClick('/user/recent')}
+        />
+
       </BottomNavigation>
     </Box>
   );

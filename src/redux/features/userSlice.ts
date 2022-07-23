@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mainConfig } from '../../configs/main-config';
 import { convertArticleToFavoriteItem } from '../../helpers/article-helper';
-import { Article, UserSliceType } from '../../types/article-types';
+import { Article, FavoriteItem, UserSliceType } from '../../types/article-types';
 
 const initialState: UserSliceType = {
   identityToken: '',
@@ -30,13 +30,15 @@ const userSlice = createSlice({
       state.recentItems = [newItem, ...restItems.slice(0, mainConfig.maxRecentItems - 1)];
     },
 
-    favoriteItemRequest: (state, action: PayloadAction<Article>) => {
+    favoriteItemRequest: (state, action: PayloadAction<Article | FavoriteItem>) => {
       if (state.favoriteItems.find((item) => item.id === action.payload.id)) {
         state.favoriteItems = state.favoriteItems.filter((item) => item.id !== action.payload.id);
         return;
       }
+      const payload =  'visited_at' in action.payload
+        ? action.payload : convertArticleToFavoriteItem(action.payload);
       const newItem = {
-        ...convertArticleToFavoriteItem(action.payload),
+        ...payload,
         favorite_at: new Date().toISOString(),
       };
       state.favoriteItems.unshift(newItem);

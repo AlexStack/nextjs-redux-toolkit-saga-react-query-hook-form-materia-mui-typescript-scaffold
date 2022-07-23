@@ -13,6 +13,7 @@ export interface FavoriteItem
   favorite_at?: string;
   author: string;
   author_avatar: string;
+  tag_list: string;
 }
 
 export interface Article {
