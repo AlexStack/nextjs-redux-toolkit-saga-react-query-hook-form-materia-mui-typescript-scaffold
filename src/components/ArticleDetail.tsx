@@ -16,6 +16,7 @@ import { Article, UserSliceType } from '../types/article-types';
 import { getArticleImgUrl } from '../helpers/article-helper';
 import userSlice from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
+import ActionToaster from './ActionToaster';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -42,7 +43,8 @@ const ArticleDetail = ({ article }:Props) => {
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
 
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded]       = useState(true);
+  const [showToaster, setShowToaster] = useState(false);
 
   const isFavorite = reduxUserData.favoriteItems.some((item) => item.id === article.id);
 
@@ -52,6 +54,7 @@ const ArticleDetail = ({ article }:Props) => {
 
   const onClickFavorite = () => {
     reduxDispatch(userSlice.actions.favoriteItemRequest(article));
+    setShowToaster(true);
   };
 
   return (
@@ -116,6 +119,7 @@ const ArticleDetail = ({ article }:Props) => {
           </Typography>
         </CardContent>
       </Collapse>
+
       <Fab
         aria-label="like"
         sx={{
@@ -143,6 +147,13 @@ const ArticleDetail = ({ article }:Props) => {
           <FavoriteIcon />
         </Tooltip>
       </Fab>
+
+      <ActionToaster
+        showToaster={showToaster}
+        setShowToaster={setShowToaster}
+        message={`This article ${isFavorite ? 'added' : 'removed'} to your favorites`}
+        alertColor={isFavorite ? 'success' : 'warning'}
+      />
 
     </Card>
   );
