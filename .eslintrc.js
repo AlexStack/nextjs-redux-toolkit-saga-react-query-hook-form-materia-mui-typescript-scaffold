@@ -41,5 +41,7 @@ module.exports = {
     'no-param-reassign': ["error", { "props": false }],
     "react/prop-types": "off" ,
     "react/require-default-props": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
   },
 };

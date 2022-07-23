@@ -1,5 +1,5 @@
 import React from 'react';
-// import Image from 'next/image';
+import Image from 'next/image';
 import {
   ImageList, ImageListItem, ListSubheader, ImageListItemBar, IconButton,
 } from '@mui/material';
@@ -21,11 +21,11 @@ const ArticleImageList = ({ dataItems }:Props) => (
       return (
         <Link href={getArticleLink(item)} key={item.id}>
           <ImageListItem key={item.id} sx={{ cursor: 'pointer' }}>
-            <img
+            <Image
               src={imageUrl}
-              srcSet={`${imageUrl}&dpr=2 2x`}
               alt={item.title}
-              loading="lazy"
+              width={900}
+              height={400}
             />
             <ImageListItemBar
               title={item.title}

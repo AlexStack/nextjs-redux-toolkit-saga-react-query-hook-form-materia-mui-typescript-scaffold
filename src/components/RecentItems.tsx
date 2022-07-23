@@ -9,7 +9,6 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
 import Image from 'next/image';
 import type { FavoriteItem, UserSliceType } from '../types/article-types';
 import { getArticleLink } from '../helpers/article-helper';
