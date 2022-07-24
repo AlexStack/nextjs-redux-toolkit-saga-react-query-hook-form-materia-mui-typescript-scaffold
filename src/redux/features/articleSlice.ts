@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Article, ArticleFilterParams, ArticleSliceType } from '../../types/article-types';
+import getUniqueAryByKey from '../../utils/get-unique-ary';
 
 const initialState: ArticleSliceType = {
-  lists : [],
-  status: '',
-  detail: null,
+  lists    : [],
+  status   : '',
+  detail   : null,
+  searchTag: '',
 };
 
 const articleSlice = createSlice({
@@ -15,6 +17,8 @@ const articleSlice = createSlice({
     getArticlesRequest: (state, action: PayloadAction<ArticleFilterParams>) => {
       console.log('🚀 ~ file: articleSlice.ts ~ line 16 ~ action', action);
       state.status = 'loading';
+
+      state.searchTag = action.payload.tag as string;
     },
     getArticlesSuccess: (state, action: PayloadAction<{
       data:Article[], params:ArticleFilterParams
@@ -22,7 +26,9 @@ const articleSlice = createSlice({
       const { data, params } = action.payload;
       console.log('🚀 ~ file: articleSlice.ts ~ line 23 ~ params', params);
 
-      state.lists = params.page && params.page > 1 ? [...state.lists, ...data] : data;
+      state.lists = params.page && params.page > 1
+        ? getUniqueAryByKey([...state.lists, ...data], 'id')
+        : data;
 
       state.status = 'loaded';
     },
