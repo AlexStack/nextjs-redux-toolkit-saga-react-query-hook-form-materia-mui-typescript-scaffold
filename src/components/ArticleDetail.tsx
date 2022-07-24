@@ -5,15 +5,16 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import {
   Avatar, Card, CardActions, CardContent,
   CardHeader, CardMedia, Collapse, Fab, Tooltip, Typography,
 } from '@mui/material';
+import MoreIcon from '@mui/icons-material/More';
+import { useRouter } from 'next/router';
 import { Article, UserSliceType } from '../types/article-types';
-import { getArticleImgUrl } from '../helpers/article-helper';
+import { getArticleImgUrl, getFormattedDate } from '../helpers/article-helper';
 import userSlice from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
 import ActionToaster from './ActionToaster';
@@ -39,6 +40,7 @@ interface Props {
 }
 
 const ArticleDetail = ({ article }:Props) => {
+  const router        = useRouter();
   const reduxDispatch = useDispatch();
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
@@ -70,12 +72,12 @@ const ArticleDetail = ({ article }:Props) => {
           </Avatar>
         )}
         action={(
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
+          <IconButton aria-label="settings" onClick={() => router.back()}>
+            <MoreIcon />
           </IconButton>
         )}
         title={article.title}
-        subheader={`${article.user.name} - ${article.published_at}`}
+        subheader={`${article.user.name} - ${getFormattedDate(article.published_at, 'MM/dd/yyyy EEEE HH:mm')}`}
       />
       <CardMedia
         component="img"
@@ -110,7 +112,9 @@ const ArticleDetail = ({ article }:Props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph component="h1">{article.title}</Typography>
+          <Typography paragraph variant="h1" component="h1" sx={{ fontSize: '2rem', fontWeight: 600 }}>
+            {article.title}
+          </Typography>
           <Typography paragraph component="div">
             <div
               // eslint-disable-next-line react/no-danger

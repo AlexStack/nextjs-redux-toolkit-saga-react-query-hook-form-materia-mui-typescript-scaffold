@@ -12,7 +12,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Image from 'next/image';
 import type { ChildrenProps, FavoriteItem, UserSliceType } from '../types/article-types';
-import { getArticleLink } from '../helpers/article-helper';
+import { getArticleImgUrl, getArticleLink } from '../helpers/article-helper';
 import { ReduxState } from '../redux/store';
 import userSlice from '../redux/features/userSlice';
 import ActionToaster from './ActionToaster';
@@ -97,7 +97,7 @@ export const PageListItems = ({
               <ListItemAvatar sx={{ paddingRight: '1rem' }}>
                 { isRecentPage ? (
                   <Image
-                    src={item.cover_image}
+                    src={getArticleImgUrl(item)}
                     alt={item.author}
                     width={150}
                     height={80}

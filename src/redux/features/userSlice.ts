@@ -16,7 +16,10 @@ const userSlice = createSlice({
   reducers: {
     visitRequest: (state) => {
       if (state.identityToken === '') {
-        state.identityToken = `identity-token-${new Date()}`;
+        const isoDate = new Date().toISOString();
+        const token   = mainConfig.isClientSide ? navigator.userAgent : Math.random().toString();
+
+        state.identityToken = `${token}|ISO DATE:${isoDate}`;
       }
       state.visitedTimes += 1;
     },

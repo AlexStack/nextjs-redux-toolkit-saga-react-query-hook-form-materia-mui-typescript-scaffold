@@ -13,10 +13,10 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
-import { TOP_MENU_PAGES } from '../constants/article-const';
+import Person from '@mui/icons-material/Person';
+import { TOP_MENU_TAGS, USER_MENU_LINKS } from '../constants/article-const';
 
-const pages    = TOP_MENU_PAGES;
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = TOP_MENU_TAGS;
 
 const MainHeader = () => {
   const [anchorElNav, setAnchorElNav]   = React.useState<null | HTMLElement>(null);
@@ -135,9 +135,11 @@ const MainHeader = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Open user menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Alex">
+                  <Person />
+                </Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -156,9 +158,11 @@ const MainHeader = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {USER_MENU_LINKS.map((menuLink) => (
+                <MenuItem key={menuLink.title} onClick={handleCloseUserMenu}>
+                  <Link href={menuLink.url}>
+                    <Typography textAlign="center">{menuLink.title}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

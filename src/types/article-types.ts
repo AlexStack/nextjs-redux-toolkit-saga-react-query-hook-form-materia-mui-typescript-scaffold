@@ -13,6 +13,7 @@ export interface FavoriteItem
   favorite_at?: string;
   author: string;
   author_avatar: string;
+  tags?: string[];
   tag_list: string;
 }
 

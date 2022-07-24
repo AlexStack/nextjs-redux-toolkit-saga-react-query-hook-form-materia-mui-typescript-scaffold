@@ -10,14 +10,15 @@ import MainLayout from '../../../layouts/MainLayout';
 import articleSlice from '../../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../../redux/store';
 import getRouterParam from '../../../utils/get-router-param';
-import { DEFAULT_KEYWORD, TOP_MENU_PAGES } from '../../../constants/article-const';
+import { DEFAULT_KEYWORD, TOP_MENU_TAGS } from '../../../constants/article-const';
 import { mainConfig } from '../../../configs/main-config';
 import userSlice from '../../../redux/features/userSlice';
 
 const Articles: NextPage = () => {
-  const router = useRouter();
-  const tag    = getRouterParam(router.query.tag, DEFAULT_KEYWORD).toLowerCase();
-  const page   = parseInt(getRouterParam(router.query.page, '1'), 10);
+  const router      = useRouter();
+  const originalTag = getRouterParam(router.query.tag, DEFAULT_KEYWORD);
+  const tag         = originalTag.toLowerCase();
+  const page        = parseInt(getRouterParam(router.query.page, '1'), 10);
 
   // Redux usage
   const reduxDispatch = useDispatch();
@@ -44,7 +45,7 @@ const Articles: NextPage = () => {
 
   return (
     <MainLayout>
-      <ArticleImageList dataItems={dataItems} />
+      <ArticleImageList dataItems={dataItems} tag={originalTag} />
     </MainLayout>
   );
 };
@@ -85,7 +86,7 @@ export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticPro
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = TOP_MENU_PAGES.map((item: string) => ({
+  const paths = TOP_MENU_TAGS.map((item: string) => ({
     params: {
       tag: item,
     },
