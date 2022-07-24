@@ -24,6 +24,11 @@ const Articles: NextPage = () => {
   const reduxDispatch = useDispatch();
   const reduxArticle  = useSelector((reduxState: ReduxState) => reduxState.article);
 
+  // reset pageRef.current if search different tag
+  if (reduxArticle.searchTag !== '' && reduxArticle.searchTag !== tag) {
+    pageRef.current = 1;
+  }
+
   // React Query usage
   const { data:rqDataItems } = useQuery(
     ['articles', { tag, page: pageRef.current }],
@@ -33,7 +38,8 @@ const Articles: NextPage = () => {
 
   const dataItems   = mainConfig.isReduxForStaticPropsEnabled ? reduxArticle.lists : rqDataItems;
   const isLoading   = reduxArticle.status === 'loading';
-  const isEndOfList = !isLoading && dataItems.length < pageRef.current * ITEMS_PER_PAGE;
+  const isEndOfList = !isLoading && dataItems.length > 0
+                      && dataItems.length < pageRef.current * ITEMS_PER_PAGE;
 
   const onClickLoadMore = () => {
     reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page: pageRef.current + 1 }));

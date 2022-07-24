@@ -68,4 +68,5 @@ export interface ArticleSliceType {
   detail: Article | null;
   status: 'loading' | 'loaded' | 'error' | '';
   message?: string;
+  searchTag: string;
 }
