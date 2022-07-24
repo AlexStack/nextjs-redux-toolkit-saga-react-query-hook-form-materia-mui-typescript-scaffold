@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_API_URI } from '../constants/article-const';
+import { BASE_API_URI, ITEMS_PER_PAGE } from '../constants/article-const';
 import { Article, ArticleFilterParams, ArticleDetailParams } from '../types/article-types';
 
 interface ReactQueryFnProps<T> {
@@ -7,9 +7,9 @@ interface ReactQueryFnProps<T> {
 }
 
 export const getArticles = async ({ tag = 'react', page = 1 }:ArticleFilterParams):Promise<Article[]> => {
-  const apiEndpoint = `${BASE_API_URI}/articles?tag=${tag}&page=${page}`;
+  const apiEndpoint = `${BASE_API_URI}/articles?tag=${tag}&page=${page}&per_page=${ITEMS_PER_PAGE}`;
   const response    = await axios.get(apiEndpoint);
-  // console.log('🚀 ~ file: article-api.ts ~ line 12 ~ getArticles ~ apiEndpoint', apiEndpoint);
+  console.log('🚀 ~ file: article-api.ts ~ line 12 ~ getArticles ~ apiEndpoint', apiEndpoint);
   return response.data;
 };
 

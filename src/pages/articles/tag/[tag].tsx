@@ -10,7 +10,7 @@ import MainLayout from '../../../layouts/MainLayout';
 import articleSlice from '../../../redux/features/articleSlice';
 import { ReduxState, reduxWrapper } from '../../../redux/store';
 import getRouterParam from '../../../utils/get-router-param';
-import { DEFAULT_KEYWORD, TOP_MENU_TAGS } from '../../../constants/article-const';
+import { DEFAULT_KEYWORD, TOP_MENU_TAGS, ITEMS_PER_PAGE } from '../../../constants/article-const';
 import { mainConfig } from '../../../configs/main-config';
 import userSlice from '../../../redux/features/userSlice';
 
@@ -18,7 +18,7 @@ const Articles: NextPage = () => {
   const router      = useRouter();
   const originalTag = getRouterParam(router.query.tag, DEFAULT_KEYWORD);
   const tag         = originalTag.toLowerCase();
-  const page        = parseInt(getRouterParam(router.query.page, '1'), 10);
+  const pageRef     = React.useRef(1);
 
   // Redux usage
   const reduxDispatch = useDispatch();
@@ -26,26 +26,39 @@ const Articles: NextPage = () => {
 
   // React Query usage
   const { data:rqDataItems } = useQuery(
-    ['articles', { tag, page }],
+    ['articles', { tag, page: pageRef.current }],
     reactQueryFn.getArticles,
     { enabled: !mainConfig.isReduxForStaticPropsEnabled },
   );
 
-  const dataItems = mainConfig.isReduxForStaticPropsEnabled ? reduxArticle.lists : rqDataItems;
+  const dataItems   = mainConfig.isReduxForStaticPropsEnabled ? reduxArticle.lists : rqDataItems;
+  const isLoading   = reduxArticle.status === 'loading';
+  const isEndOfList = !isLoading && dataItems.length < pageRef.current * ITEMS_PER_PAGE;
+
+  const onClickLoadMore = () => {
+    reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page: pageRef.current + 1 }));
+    pageRef.current += 1;
+  };
 
   useEffect(
     () => {
-      if (!mainConfig.isStaticPageDebugDisabled) {
-        reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
+      if (mainConfig.isStaticPageDebugDisabled) {
+        reduxDispatch(articleSlice.actions.getArticlesRequest({ tag, page: pageRef.current }));
       }
       reduxDispatch(userSlice.actions.visitRequest());
     },
-    [page, reduxDispatch, tag],
+    [reduxDispatch, tag],
   );
 
   return (
     <MainLayout>
-      <ArticleImageList dataItems={dataItems} tag={originalTag} />
+      <ArticleImageList
+        dataItems={dataItems}
+        tag={originalTag}
+        onClickLoadMore={onClickLoadMore}
+        loading={reduxArticle.status === 'loading'}
+        isEndOfList={isEndOfList}
+      />
     </MainLayout>
   );
 };
@@ -53,10 +66,11 @@ const Articles: NextPage = () => {
 export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) => {
   const queryClient = new QueryClient();
 
-  const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
+  const tag  = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
+  const page = parseInt(getRouterParam(params?.page, '1'), 10);
 
   await queryClient.prefetchQuery(
-    ['articles', { page: 1, tag }],
+    ['articles', { page, tag }],
     reactQueryFn.getArticles,
   );
 
@@ -70,15 +84,18 @@ export const getStaticPropsFromReactQuery: GetStaticProps = async ({ params }) =
 
 export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticProps(
   (store) => async ({ params }) => {
-    const tag = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
+    const tag  = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
+    const page = parseInt(getRouterParam(params?.page, '1'), 10);
+    console.log('🚀 ~ file: [tag].tsx ~ line 75 ~ params', params);
 
-    store.dispatch(articleSlice.actions.getArticlesRequest({ tag, page: 1 }));
+    store.dispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
     store.dispatch(END);
     await store.sagaTask.toPromise();
 
     return {
       props: {
         tag,
+        page,
       },
       revalidate: mainConfig.listPageRefreshInterval,
     };

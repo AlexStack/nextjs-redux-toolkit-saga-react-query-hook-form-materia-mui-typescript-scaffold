@@ -6,10 +6,16 @@ import { Article, ArticleFilterParams } from '../types/article-types';
 
 export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
   try {
-    const response:Article[] = yield call(() => articleApi.getArticles(action.payload));
-    console.log('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ action', action, response.length);
+    const response:Article[] = yield call(articleApi.getArticles, action.payload);
 
-    yield put(articleSlice.actions.getArticlesSuccess(response));
+    const newData = {
+      params: action.payload,
+      data  : response,
+    };
+
+    // const response:Article[] = yield call(() => articleApi.getArticles(action.payload));
+
+    yield put(articleSlice.actions.getArticlesSuccess(newData));
   } catch (e: any) {
     console.log('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ e', e);
 

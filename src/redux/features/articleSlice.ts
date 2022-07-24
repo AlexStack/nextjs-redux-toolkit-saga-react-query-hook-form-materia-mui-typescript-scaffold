@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Article, ArticleSliceType } from '../../types/article-types';
+import { Article, ArticleFilterParams, ArticleSliceType } from '../../types/article-types';
 
 const initialState: ArticleSliceType = {
   lists : [],
@@ -12,12 +12,18 @@ const articleSlice = createSlice({
   initialState,
   reducers: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getArticlesRequest: (state, action: PayloadAction<{ page:number, tag:string }>) => {
+    getArticlesRequest: (state, action: PayloadAction<ArticleFilterParams>) => {
+      console.log('🚀 ~ file: articleSlice.ts ~ line 16 ~ action', action);
       state.status = 'loading';
     },
-    getArticlesSuccess: (state, action: PayloadAction<Article[]>) => {
-      // eslint-disable-next-line no-multi-spaces
-      state.lists  = action.payload;
+    getArticlesSuccess: (state, action: PayloadAction<{
+      data:Article[], params:ArticleFilterParams
+    }>) => {
+      const { data, params } = action.payload;
+      console.log('🚀 ~ file: articleSlice.ts ~ line 23 ~ params', params);
+
+      state.lists = params.page && params.page > 1 ? [...state.lists, ...data] : data;
+
       state.status = 'loaded';
     },
     getArticlesFailure: (state, action: PayloadAction<string>) => {
