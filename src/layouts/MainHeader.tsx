@@ -17,8 +17,6 @@ import Person from '@mui/icons-material/Person';
 import { TOP_MENU_TAGS, USER_MENU_LINKS } from '../constants/article-const';
 import { getTagLink } from '../helpers/article-helper';
 
-const pages = TOP_MENU_TAGS;
-
 const MainHeader = () => {
   const [anchorElNav, setAnchorElNav]   = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -90,11 +88,11 @@ const MainHeader = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+              {TOP_MENU_TAGS.map((tag) => (
+                <MenuItem key={tag} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Link href={getTagLink(page)} passHref>
-                      {page}
+                    <Link href={getTagLink(tag)} passHref>
+                      {tag}
                     </Link>
                   </Typography>
                 </MenuItem>
@@ -121,15 +119,15 @@ const MainHeader = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Link href={getTagLink(page)} passHref key={page}>
+            {TOP_MENU_TAGS.map((tag) => (
+              <Link href={getTagLink(tag)} passHref key={tag}>
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{
                     my: 2, color: 'white', display: 'block', textTransform: 'none',
                   }}
                 >
-                  {page}
+                  {tag}
                 </Button>
               </Link>
             ))}
