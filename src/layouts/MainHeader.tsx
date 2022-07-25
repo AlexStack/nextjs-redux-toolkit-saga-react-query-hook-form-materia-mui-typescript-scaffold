@@ -15,6 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import Person from '@mui/icons-material/Person';
 import { TOP_MENU_TAGS, USER_MENU_LINKS } from '../constants/article-const';
+import { getTagLink } from '../helpers/article-helper';
 
 const pages = TOP_MENU_TAGS;
 
@@ -92,7 +93,7 @@ const MainHeader = () => {
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Link href={`/articles/tag/${page}`}>
+                    <Link href={getTagLink(page)} passHref>
                       {page}
                     </Link>
                   </Typography>
@@ -121,7 +122,7 @@ const MainHeader = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link href={`/articles/tag/${page}`} key={page}>
+              <Link href={getTagLink(page)} passHref key={page}>
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{

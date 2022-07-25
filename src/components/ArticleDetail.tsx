@@ -8,13 +8,16 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import {
-  Avatar, Card, CardActions, CardContent,
-  CardHeader, CardMedia, Collapse, Fab, Tooltip, Typography,
+  Avatar, Box, Card, CardActions, CardContent,
+  CardHeader, CardMedia, Chip, Collapse, Fab, Tooltip, Typography,
 } from '@mui/material';
 import MoreIcon from '@mui/icons-material/More';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Article, UserSliceType } from '../types/article-types';
-import { getArticleImgUrl, getFormattedDate } from '../helpers/article-helper';
+import {
+  getArticleImgUrl, getArticleTags, getFormattedDate, getTagLink,
+} from '../helpers/article-helper';
 import userSlice from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
 import ActionToaster from './ActionToaster';
@@ -50,6 +53,8 @@ const ArticleDetail = ({ article }:Props) => {
 
   const isFavorite = reduxUserData.favoriteItems.some((item) => item.id === article.id);
 
+  const allTags = getArticleTags(article);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -68,7 +73,7 @@ const ArticleDetail = ({ article }:Props) => {
             aria-label="recipe"
             src={article.user.profile_image_90}
           >
-            R
+            {article.user.name}
           </Avatar>
         )}
         action={(
@@ -121,6 +126,29 @@ const ArticleDetail = ({ article }:Props) => {
               dangerouslySetInnerHTML={{ __html: article.body_html || '' }}
             />
           </Typography>
+
+          {allTags.length > 0 && (
+            <Box sx={{ margin: '2rem 0' }}>
+              <Chip
+                avatar={(
+                  <Avatar
+                    alt={article.user.name}
+                    src={article.user.profile_image_90}
+                  />
+                )}
+                label={article.user.name}
+                variant="outlined"
+                sx={{ marginRight: '1rem', background: '#f5f5f5' }}
+              />
+
+              {allTags.map((tag) => (
+                <Link href={getTagLink(tag)} passHref>
+                  <Chip label={tag} variant="outlined" component="a" sx={{ marginRight: '1rem' }} />
+                </Link>
+              ))}
+            </Box>
+          )}
+
         </CardContent>
       </Collapse>
 

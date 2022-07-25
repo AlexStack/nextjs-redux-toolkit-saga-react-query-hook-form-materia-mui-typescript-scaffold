@@ -28,7 +28,7 @@ const ArticleImageList = ({
     </ImageListItem>
     {dataItems && dataItems.map((item) => {
       const imageUrl = getArticleImgUrl(item);
-      const subtitle = `${getFormattedDate(item.published_at)}, ${item.reading_time_minutes} minutes to read, ${item.id}`;
+      const subtitle = `${getFormattedDate(item.published_at)}, ${item.reading_time_minutes} minutes to read`;
       return (
         <Link href={getArticleLink(item)} key={item.id}>
           <ImageListItem key={item.id} sx={{ cursor: 'pointer' }}>

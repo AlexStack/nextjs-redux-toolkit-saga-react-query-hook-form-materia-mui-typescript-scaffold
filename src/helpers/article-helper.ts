@@ -4,6 +4,8 @@ import { Article, FavoriteItem } from '../types/article-types';
 
 export const getArticleLink = (article: Article | FavoriteItem) => `/articles/${article.slug}-${article.id}`;
 
+export const getTagLink = (tag: string) => `/articles/tag/${tag}`;
+
 export const getArticleTags = (article: Article | FavoriteItem) => {
   let tagAry:string[] = article?.tags && Array.isArray(article.tags) ? article.tags : [];
   if (tagAry.length === 0) {

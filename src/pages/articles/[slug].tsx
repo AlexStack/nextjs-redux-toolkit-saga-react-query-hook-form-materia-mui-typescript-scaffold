@@ -21,18 +21,8 @@ const ArticleDetails: NextPage = ({
   articleId,
 }
 :InferGetStaticPropsType<typeof getStaticProps>) => {
-  console.log('🚀 ~ file: [slug].tsx ~ line 19 ~ serverRedux', serverRedux, mainConfig);
-  // const router      = useRouter();
-  // const articleSlug = getRouterParam(router.query.slug);
-  // const articleId   = getIdFromSlug(articleSlug) || 0;
-
-  // const articleDetail = serverRedux?.article.detail;
-
-  // // Redux usage
   const reduxDispatch = useDispatch();
-  // const reduxArticle = useSelector((reduxState: ReduxState) => reduxState.article);
 
-  // // React Query usage
   const { data:reactQueryData } = useQuery(
     ['articles', { id: articleId }],
     reactQueryFn.getArticleDetail,
