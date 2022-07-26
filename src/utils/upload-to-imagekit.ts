@@ -33,7 +33,7 @@ export const uploadFileToImageKit = async ({
 }:UploadFileToImageKitProps):Promise<ImagekitResType> => {
   let imageKitAuth = auth;
   if (!auth) {
-    const authRes = await axios.get(authApiEndpoint);
+    const authRes = await axios.post(authApiEndpoint);
 
     imageKitAuth = authRes.data as ImageKitAuthType;
   }

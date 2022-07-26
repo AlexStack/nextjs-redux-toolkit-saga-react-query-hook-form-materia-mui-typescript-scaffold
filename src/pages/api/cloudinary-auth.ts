@@ -13,19 +13,19 @@ import crypto from 'crypto';
 
  */
 
-interface ResponseData {
+export interface CloudinaryAuthType {
   eager: string;
   publicId: string;
   timestamp: number;
   signature: string;
-  uploadUrl: string ;
-  apiKey: string ;
+  uploadUrl: string;
+  apiKey: string;
   urlEndpoint: string;
 }
 
 const cloudinaryAuth = (
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<CloudinaryAuthType>,
 ) => {
   const keys = {
     apiKey     : process.env.CLOUDINARY_API_KEY || 'Missing CLOUDINARY_API_KEY',
@@ -34,10 +34,12 @@ const cloudinaryAuth = (
   };
 
   const timestamp = Math.round(new Date().getTime() / 1000);
-  const eager     = process.env.CLOUDINARY_API_EAGER || 'c_limit,w_1600';
-  const publicId  = req.query.publicId as string || 'def_public_id';
+  const eager     = req.body.eager as string || 'c_limit,w_1600';
+  const publicId  = req.body.publicId as string || `public_id_${timestamp}`;
+  const folder    = req.body.folder as string || 'default_folder';
 
-  const serializedSortedParameters = `eager=${eager}&public_id=${publicId}&timestamp=${timestamp}${keys.apiSecret}`;
+  const serializedSortedParameters = `eager=${eager}&folder=${folder}&public_id=${publicId}&timestamp=${timestamp}${keys.apiSecret}`;
+  console.log('🚀 ~ file: cloudinary-auth.ts ~ line 42 ~ serializedSortedParameters', serializedSortedParameters, req.body);
 
   const signature = crypto.createHash('sha1').update(serializedSortedParameters, 'binary').digest('hex');
 
@@ -55,7 +57,11 @@ const cloudinaryAuth = (
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<CloudinaryAuthType>,
 ) {
+  if (req.method !== 'POST') {
+    res.status(405);
+    return;
+  }
   cloudinaryAuth(req, res);
 }

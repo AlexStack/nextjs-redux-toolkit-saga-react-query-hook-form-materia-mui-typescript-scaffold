@@ -107,10 +107,16 @@ const ProfileForm = () => {
             />
 
           )}
-          <Box>
+          <Stack
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            spacing={1}
+            sx={{ minWidth: '10rem' }}
+          >
             <Tooltip title="Upload an image as your avatar" placement="right">
               <Avatar
-                alt="Remy Sharp"
+                alt="Alex Sharp"
                 sx={{ width: 56, height: 56, cursor: 'pointer' }}
                 component="label"
               >
@@ -118,8 +124,10 @@ const ProfileForm = () => {
                 <input hidden accept="image/*" type="file" onChange={uploadAvatar} />
               </Avatar>
             </Tooltip>
-            {reduxUserData.status === 'loading' && <Typography variant="caption">Uploading...</Typography>}
-          </Box>
+            <Typography variant="caption">
+              {reduxUserData.status === 'loading' ? 'Uploading...' : 'Choose an image'}
+            </Typography>
+          </Stack>
 
         </Stack>
 

@@ -41,5 +41,9 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ImageKitAuthType>,
 ) {
+  if (req.method !== 'POST') {
+    res.status(405);
+    return;
+  }
   imageKitAuth(req, res);
 }
