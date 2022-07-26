@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mainConfig } from '../../configs/main-config';
 import { convertArticleToFavoriteItem } from '../../helpers/article-helper';
 import {
-  Article, AvatarResponse, FavoriteItem, UserSliceType,
+  Article, AvatarResponse, FavoriteItem, UploadFileParams, UserSliceType,
 } from '../../types/article-types';
 
 const initialState: UserSliceType = {
@@ -56,7 +56,7 @@ const userSlice = createSlice({
       state.favoriteItems.unshift(newItem);
     },
 
-    uploadAvatarRequest: (state, action: PayloadAction<File>) => {
+    uploadAvatarRequest: (state, action: PayloadAction<UploadFileParams>) => {
       state.status = 'loading';
       console.log('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarRequest', action, state);
     },

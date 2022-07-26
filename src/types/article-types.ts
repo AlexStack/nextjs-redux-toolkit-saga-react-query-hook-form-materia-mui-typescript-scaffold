@@ -7,6 +7,11 @@ export interface ArticleDetailParams {
   id: number;
 }
 
+export interface UploadFileParams {
+  file: File;
+  provider: 'cloudinary' | 'imagekit';
+}
+
 export interface FavoriteItem
   extends Pick<Article, 'id' | 'title' | 'description' | 'tags' | 'cover_image' | 'slug' | 'published_at'> {
   visited_at: string;

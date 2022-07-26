@@ -13,7 +13,7 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { useDispatch, useSelector } from 'react-redux';
 import userSlice from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
-import { UserSliceType } from '../types/article-types';
+import { UploadFileParams, UserSliceType } from '../types/article-types';
 
 interface IFormInput {
   firstName: string;
@@ -29,6 +29,8 @@ const ProfileForm = () => {
   // const profileData = reduxUserData.profile;
 
   const [, setShowToaster] = React.useState(false);
+
+  const [uploadProvider, setUploadProvider] = React.useState<UploadFileParams['provider']>('imagekit');
 
   const { control, handleSubmit } = useForm<IFormInput>();
 
@@ -72,9 +74,18 @@ const ProfileForm = () => {
   const uploadAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.files);
     if (event.target.files && event.target.files?.length > 0) {
-      reduxDispatch(userSlice.actions.uploadAvatarRequest(event.target.files[0]));
+      reduxDispatch(userSlice.actions.uploadAvatarRequest({
+        file    : event.target.files[0],
+        provider: uploadProvider,
+      }));
       setShowToaster(true);
     }
+  };
+
+  const onChangeUploadProvider = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadProvider(event.target.value as UploadFileParams['provider']);
+    console.log('🚀 ~ file: ProfileForm.tsx ~ line 81 ~ onChangeUploadProvider ~ event', event.target.value);
+    // setChecked(event.target.checked);
   };
 
   return (
@@ -114,7 +125,7 @@ const ProfileForm = () => {
             spacing={1}
             sx={{ minWidth: '10rem' }}
           >
-            <Tooltip title="Upload an image as your avatar" placement="right">
+            <Tooltip title="Upload an image as your avatar" placement="top">
               <Avatar
                 alt="Alex Sharp"
                 sx={{ width: 56, height: 56, cursor: 'pointer' }}
@@ -129,18 +140,34 @@ const ProfileForm = () => {
             </Typography>
           </Stack>
 
+          <RadioGroup
+            row={false}
+            defaultValue="imagekit"
+            value={uploadProvider}
+            aria-labelledby="upload-provider-radio-group-label"
+            name="upload-provider-radio-group"
+            onChange={onChangeUploadProvider}
+          >
+            <FormControlLabel value="cloudinary" control={<Radio color="secondary" />} label="Upload to Cloudinary" />
+            <FormControlLabel value="imagekit" control={<Radio color="success" />} label="Upload to ImageKit" />
+          </RadioGroup>
+
+          {/* <Stack direction="row" spacing={1} alignItems="center">
+            <Typography>Upload to Cloudinary</Typography>
+            <Switch defaultChecked={false}
+            onChange={onChangeUploadProvider} inputProps={{ 'aria-label': 'ant design' }} />
+            <Typography>Upload to ImageKit</Typography>
+          </Stack> */}
+
         </Stack>
 
         <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-          >
-            <FormControlLabel value="female" control={<Radio />} label="I'm not Female" />
-            <FormControlLabel value="male" control={<Radio />} label="I'm not Male" />
-          </RadioGroup>
+          <FormLabel id="demo-upload-provider-radio-group-label">Gender</FormLabel>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography>Female</Typography>
+            <Switch defaultChecked inputProps={{ 'aria-label': 'Choose gender' }} />
+            <Typography>Male</Typography>
+          </Stack>
         </FormControl>
 
         <FormControl>

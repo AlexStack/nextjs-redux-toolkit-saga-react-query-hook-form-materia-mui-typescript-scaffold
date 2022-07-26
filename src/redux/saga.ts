@@ -4,7 +4,9 @@ import articleSlice from './features/articleSlice';
 import * as articleApi from '../apis/article-api';
 import * as userApi from '../apis/user-api';
 
-import { Article, ArticleFilterParams, AvatarResponse } from '../types/article-types';
+import {
+  Article, ArticleFilterParams, AvatarResponse, UploadFileParams,
+} from '../types/article-types';
 import userSlice from './features/userSlice';
 
 export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
@@ -36,9 +38,10 @@ export function* fetchArticleDetail(action: PayloadAction<{ id: number }>) {
   }
 }
 
-export function* uploadAvatar(action: PayloadAction<File>) {
+export function* uploadAvatar(action: PayloadAction<UploadFileParams>) {
   try {
     const response:AvatarResponse = yield call(userApi.uploadAvatar, action.payload);
+
     console.log('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ response', response);
 
     yield put(userSlice.actions.uploadAvatarSuccess(response));
