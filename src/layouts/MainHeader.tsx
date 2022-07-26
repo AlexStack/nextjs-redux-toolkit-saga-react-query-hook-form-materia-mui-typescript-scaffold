@@ -141,7 +141,7 @@ const MainHeader = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open user menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {reduxUserData.profile.avatarUrl ? (
+                {reduxUserData?.profile?.avatarUrl ? (
                   <Avatar src={reduxUserData.profile.avatarUrl} />
                 ) : (
                   <Avatar alt="Alex">
