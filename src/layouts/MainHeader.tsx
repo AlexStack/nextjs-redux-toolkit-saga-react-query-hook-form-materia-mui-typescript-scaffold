@@ -15,6 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import Person from '@mui/icons-material/Person';
 import { useSelector } from 'react-redux';
+import { Badge } from '@mui/material';
 import { TOP_MENU_TAGS, USER_MENU_LINKS } from '../constants/article-const';
 import { getTagLink } from '../helpers/article-helper';
 import { ReduxState } from '../redux/store';
@@ -25,6 +26,9 @@ const MainHeader = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
+
+  const badgeContent = reduxUserData.favoriteItems.length || reduxUserData.recentItems.length;
+  const badgeColor   = reduxUserData.favoriteItems.length ? 'error' : 'secondary';
 
   const handleOpenNavMenu  = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -141,14 +145,15 @@ const MainHeader = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open user menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {reduxUserData?.profile?.avatarUrl ? (
-                  <Avatar src={reduxUserData.profile.avatarUrl} />
-                ) : (
-                  <Avatar alt="Alex">
-                    <Person />
-                  </Avatar>
-                ) }
-
+                <Badge badgeContent={badgeContent} color={badgeColor}>
+                  {reduxUserData?.profile?.avatarUrl ? (
+                    <Avatar src={reduxUserData.profile.avatarUrl} />
+                  ) : (
+                    <Avatar alt="Alex">
+                      <Person />
+                    </Avatar>
+                  ) }
+                </Badge>
               </IconButton>
             </Tooltip>
             <Menu

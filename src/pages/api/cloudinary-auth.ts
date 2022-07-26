@@ -4,7 +4,7 @@ import crypto from 'crypto';
  *
  * API endpoint: http://localhost:3000/api/cloudinary-auth
  *
- * ============ Example of .env ============
+ * ============ Example of .env.local ============
  * CLOUDINARY_API_KEY="98624656233"
  * CLOUDINARY_API_SECRET="eQq7lcKKGcNUr5fB_8aqNIk"
  * CLOUDINARY_API_BASE_URL="https://api.cloudinary.com/v1_1/pereey"

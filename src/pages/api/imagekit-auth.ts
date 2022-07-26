@@ -5,7 +5,7 @@ import ImageKit from 'imagekit';
  *
  * API endpoint: http://localhost:3000/api/imagekit-auth
  *
- * ============ Example of .env ============
+ * ============ Example of .env.local ============
  * IMAGEKIT_API_PUBLIC_KEY="public_4TznVN3Qst1FY51fJL8="
  * IMAGEKIT_API_PRIVATE_KEY="private_GDcEsLRTRpMvf5t1WII="
  * IMAGEKIT_API_END_POINT="https://ik.imagekit.io/ksos9gww"

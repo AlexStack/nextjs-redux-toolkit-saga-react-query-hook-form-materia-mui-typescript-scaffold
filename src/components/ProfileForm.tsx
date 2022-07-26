@@ -4,16 +4,34 @@ import Select from '@mui/material/Select';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import {
   FormControl, Stack, TextField, InputLabel, Box,
-  FormControlLabel, FormLabel, Radio, RadioGroup,
+  FormControlLabel, FormLabel, Radio, RadioGroup, Rating,
   Switch, Checkbox, Slider, Typography, Button, Avatar, Tooltip,
 } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import SendIcon from '@mui/icons-material/Send';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { useDispatch, useSelector } from 'react-redux';
+import StarIcon from '@mui/icons-material/Star';
 import userSlice from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
 import { UploadFileParams, UserSliceType } from '../types/article-types';
+
+const starLabels: { [index: string]: string } = {
+  0.5: 'Useless',
+  1  : 'Useless+',
+  1.5: 'Poor',
+  2  : 'Poor+',
+  2.5: 'Ok',
+  3  : 'Ok+',
+  3.5: 'Good',
+  4  : 'Good+',
+  4.5: 'Excellent',
+  5  : 'Excellent+',
+};
+
+function getStarLabelText(value: number) {
+  return `${value} Star${value !== 1 ? 's' : ''}, ${starLabels[value]}`;
+}
 
 interface IFormInput {
   firstName: string;
@@ -35,6 +53,9 @@ const ProfileForm = () => {
   const { control, handleSubmit } = useForm<IFormInput>();
 
   const [checked, setChecked] = React.useState([true, false]);
+
+  const [starValue, setStarValue] = React.useState<number | null>(2);
+  const [starHover, setStarHover] = React.useState(-1);
 
   const sliderMarks = [
     {
@@ -148,7 +169,7 @@ const ProfileForm = () => {
             name="upload-provider-radio-group"
             onChange={onChangeUploadProvider}
           >
-            <FormControlLabel value="cloudinary" control={<Radio color="secondary" />} label="Upload to Cloudinary" />
+            <FormControlLabel value="cloudinary" control={<Radio color="primary" />} label="Upload to Cloudinary" />
             <FormControlLabel value="imagekit" control={<Radio color="success" />} label="Upload to ImageKit" />
           </RadioGroup>
 
@@ -164,9 +185,10 @@ const ProfileForm = () => {
         <FormControl>
           <FormLabel id="demo-upload-provider-radio-group-label">Gender</FormLabel>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Typography>Female</Typography>
-            <Switch defaultChecked inputProps={{ 'aria-label': 'Choose gender' }} />
             <Typography>Male</Typography>
+            {/* <Switch defaultChecked inputProps={{ 'aria-label': 'Choose gender' }} />
+            <Typography>Male</Typography> */}
+            <FormControlLabel control={<Switch color="error" />} label="Female" />
           </Stack>
         </FormControl>
 
@@ -232,7 +254,33 @@ const ProfileForm = () => {
           </Box>
         </FormControl>
 
-        <FormControlLabel control={<Switch defaultChecked={false} />} label="I used Redux Saga before" />
+        <Stack direction="row" spacing={1} alignItems="left">
+          <Typography>Do you think this NextJs Redux ReactHookForm example is helpful?</Typography>
+          <Box
+            sx={{
+              width     : 200,
+              display   : 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Rating
+              name="hover-feedback"
+              value={starValue}
+              precision={0.5}
+              getLabelText={getStarLabelText}
+              onChange={(event, newValue) => {
+                setStarValue(newValue);
+              }}
+              onChangeActive={(event, newHover) => {
+                setStarHover(newHover);
+              }}
+              emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+            />
+            {starValue !== null && (
+              <Box sx={{ ml: 2 }}>{starLabels[starHover !== -1 ? starHover : starValue]}</Box>
+            )}
+          </Box>
+        </Stack>
 
         <FormControl>
           <Typography paragraph variant="subtitle1" component="div">
