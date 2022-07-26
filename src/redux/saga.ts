@@ -2,7 +2,10 @@ import { call, takeLatest, put } from 'redux-saga/effects';
 import { PayloadAction } from '@reduxjs/toolkit';
 import articleSlice from './features/articleSlice';
 import * as articleApi from '../apis/article-api';
-import { Article, ArticleFilterParams } from '../types/article-types';
+import * as userApi from '../apis/user-api';
+
+import { Article, ArticleFilterParams, AvatarResponse } from '../types/article-types';
+import userSlice from './features/userSlice';
 
 export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
   try {
@@ -33,22 +36,25 @@ export function* fetchArticleDetail(action: PayloadAction<{ id: number }>) {
   }
 }
 
-// export function* fetchNumberSaga() {
-//   try {
-//     let result = yield call(() =>
-//       callAPI({
-//         url: 'http://www.randomnumberapi.com/api/v1.0/random?min=100&max=1000&count=1',
-//       })
-//     )
-//     yield put(userSlice.actions.visit(result.data[0]))
-//   } catch (e) {
-//     yield put({ type: 'NUMBER_SAGA_FAILED' })
-//   }
-// }
+export function* uploadAvatar(action: PayloadAction<File>) {
+  try {
+    const response:AvatarResponse = yield call(userApi.uploadAvatar, action.payload);
+    console.log('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ response', response);
+
+    yield put(userSlice.actions.uploadAvatarSuccess(response));
+  } catch (e: any) {
+    console.log('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ error', e);
+
+    // yield put(articleSlice.actions.getArticleDetailFailure(e.message));
+  }
+}
 
 export default function* rootSaga() {
   yield takeLatest(articleSlice.actions.getArticlesRequest, fetchArticles);
   yield takeLatest(articleSlice.actions.getArticleDetailRequest, fetchArticleDetail);
+
+  // uploadAvatarRequest
+  yield takeLatest(userSlice.actions.uploadAvatarRequest, uploadAvatar);
 
   // yield takeLatest(userSlice.actions.visit, fetchNumberSaga)
 }

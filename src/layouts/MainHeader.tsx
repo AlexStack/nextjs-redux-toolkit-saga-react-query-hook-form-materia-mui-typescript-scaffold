@@ -14,12 +14,17 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import Person from '@mui/icons-material/Person';
+import { useSelector } from 'react-redux';
 import { TOP_MENU_TAGS, USER_MENU_LINKS } from '../constants/article-const';
 import { getTagLink } from '../helpers/article-helper';
+import { ReduxState } from '../redux/store';
+import { UserSliceType } from '../types/article-types';
 
 const MainHeader = () => {
   const [anchorElNav, setAnchorElNav]   = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+  const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
 
   const handleOpenNavMenu  = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -136,9 +141,14 @@ const MainHeader = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open user menu">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Alex">
-                  <Person />
-                </Avatar>
+                {reduxUserData.profile.avatarUrl ? (
+                  <Avatar src={reduxUserData.profile.avatarUrl} />
+                ) : (
+                  <Avatar alt="Alex">
+                    <Person />
+                  </Avatar>
+                ) }
+
               </IconButton>
             </Tooltip>
             <Menu

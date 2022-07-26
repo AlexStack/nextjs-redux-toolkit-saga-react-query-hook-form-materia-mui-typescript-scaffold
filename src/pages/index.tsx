@@ -7,11 +7,11 @@ import MainLayout from '../layouts/MainLayout';
 
 const Home:NextPage = () => (
   <MainLayout>
-    <Typography variant="h4" component="h1">
+    <Typography variant="h1" component="h1">
       Welcome to Next.js!
     </Typography>
     <Box my={4} flex={1} overflow="auto">
-      <Link href="/articles/react">
+      <Link href="/articles/tag/react">
         React Articles
       </Link>
     </Box>

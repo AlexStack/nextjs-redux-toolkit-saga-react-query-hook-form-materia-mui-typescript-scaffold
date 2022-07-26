@@ -55,18 +55,31 @@ export interface ChildrenProps {
   children:React.ReactNode;
 }
 
+export interface Profile {
+  name: string;
+  username: string;
+  email: string;
+  avatarUrl: string;
+}
+
+export interface AvatarResponse {
+  avatarUrl: string;
+}
+
 // redux slice types
 export interface UserSliceType {
   identityToken: string;
   visitedTimes: number;
   recentItems: FavoriteItem[];
   favoriteItems: FavoriteItem[];
+  profile: Profile;
+  status: 'loading' | 'loaded' | 'error' | '';
 }
 
 export interface ArticleSliceType {
   lists: Article[];
   detail: Article | null;
-  status: 'loading' | 'loaded' | 'error' | '';
+  status: UserSliceType['status'];
   message?: string;
   searchTag: string;
 }

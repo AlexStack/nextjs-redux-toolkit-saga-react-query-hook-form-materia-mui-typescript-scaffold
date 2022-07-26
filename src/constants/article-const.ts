@@ -11,6 +11,6 @@ export const TOP_MENU_TAGS = ['Redux', 'ReactNative', 'MUI', 'Typescript', 'Next
 export const USER_MENU_LINKS = [
   { title: 'My Favorites', url: '/user/favorite' },
   { title: 'Recent Viewed', url: '/user/recent' },
-  { title: 'Change Profile', url: '/user/favorite' },
+  { title: 'Change Profile', url: '/user/profile' },
   { title: 'Logout ', url: '/user/favorite' },
 ];

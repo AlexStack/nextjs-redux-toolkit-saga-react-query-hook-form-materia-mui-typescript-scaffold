@@ -12,18 +12,18 @@ import ImageKit from 'imagekit';
  * IMAGEKIT_API_UPLOAD_URL="https://upload.imagekit.io/api/v1/files/upload"
  */
 
-interface ResponseData {
+export interface ImageKitAuthType {
   token: string;
   expire: number;
   signature: string;
   publicKey: string ;
-  urlEndpoint: string ;
+  urlEndpoint: string;
   uploadUrl: string ;
 }
 
 const imageKitAuth = (
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<ImageKitAuthType>,
 ) => {
   const keys     = {
     publicKey  : process.env.IMAGEKIT_API_PUBLIC_KEY || 'Missing IMAGEKIT_API_PUBLIC_KEY',
@@ -39,7 +39,7 @@ const imageKitAuth = (
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<ImageKitAuthType>,
 ) {
   imageKitAuth(req, res);
 }
