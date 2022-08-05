@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useEffect } from 'react';
 import Select from '@mui/material/Select';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import {
@@ -13,7 +13,7 @@ import SendIcon from '@mui/icons-material/Send';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { useDispatch, useSelector } from 'react-redux';
 import StarIcon from '@mui/icons-material/Star';
-import userSlice from '../redux/features/userSlice';
+import userSlice, { defaultProfileValues } from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
 import { Profile, UploadFileParams, UserSliceType } from '../types/article-types';
 
@@ -81,21 +81,22 @@ const ProfileForm = () => {
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
 
-  const profileData = reduxUserData.profile;
+  // const profileData = reduxUserData.profile;
+  // const [profileData, setProfileData] = React.useState<Profile>(reduxUserData.profile);
 
   const [, setShowToaster] = React.useState(false);
 
   const [uploadProvider, setUploadProvider] = React.useState<UploadFileParams['provider']>('imagekit');
 
   const {
-    control, getValues, handleSubmit, watch, formState: { errors },
+    control, getValues, handleSubmit, watch, reset, formState: { errors },
   } = useForm<Profile>({
     mode          : 'onTouched',
     reValidateMode: 'onChange',
     delayError    : 500,
-    defaultValues : profileData,
+    defaultValues : reduxUserData.profile,
   });
-  console.log('🚀 ~ file: ProfileForm.tsx ~ line 69 ~ ProfileForm ~ watch', watch());
+  console.log('🚀 ~ file: ProfileForm.tsx ~ line 69 ~ ProfileForm ~ watch', watch('starRating'), reduxUserData.profile);
 
   const [starHover, setStarHover] = React.useState(-1);
 
@@ -120,6 +121,12 @@ const ProfileForm = () => {
   const onChangeUploadProvider = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUploadProvider(event.target.value as UploadFileParams['provider']);
   };
+
+  useEffect(() => {
+    if (defaultProfileValues !== reduxUserData.profile) {
+      reset(reduxUserData.profile); // reload page will not showing saved data if not reset
+    }
+  }, [reduxUserData.profile, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -328,9 +335,7 @@ const ProfileForm = () => {
                   value={value}
                   precision={0.5}
                   getLabelText={getStarLabelText}
-                  onChange={(event, newValue) => {
-                    onChange(event, newValue);
-                  }}
+                  onChange={onChange}
                   onChangeActive={(event, newHover) => {
                     setStarHover(newHover);
                   }}
@@ -359,11 +364,12 @@ const ProfileForm = () => {
             control={control}
             name="yearsUsingReact"
             render={({
-              field: { onChange },
+              field: { onChange, value },
             }) => (
               <Slider
                 aria-label="Always visible"
                 onChange={onChange}
+                value={value}
                 max={20}
                 step={0.1}
                 marks={sliderMarks}
