@@ -5,7 +5,7 @@ import {
   Article, AvatarResponse, FavoriteItem, Profile, UploadFileParams, UserSliceType,
 } from '../../types/article-types';
 
-const defaultProfileValues: Profile = {
+export const defaultProfileValues: Profile = {
   firstName : 'Alex Your Name',
   isFemale  : false,
   ageRange  : 30,
