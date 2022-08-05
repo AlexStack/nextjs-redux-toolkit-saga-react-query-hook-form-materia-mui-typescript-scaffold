@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import Select from '@mui/material/Select';
@@ -5,7 +6,7 @@ import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import {
   FormControl, Stack, TextField, InputLabel, Box,
   FormControlLabel, FormLabel, Radio, RadioGroup, Rating,
-  Switch, Checkbox, Slider, Typography, Button, Avatar, Tooltip,
+  Switch, Checkbox, Slider, Typography, Button, Avatar, Tooltip, FormHelperText,
 } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import SendIcon from '@mui/icons-material/Send';
@@ -29,15 +30,51 @@ const starLabels: { [index: string]: string } = {
   5  : 'Excellent+',
 };
 
+const sliderMarks = [
+  {
+    value: 1,
+    label: '1 year',
+  },
+  {
+    value: 5,
+    label: '5 year',
+  },
+  {
+    value: 10,
+    label: '10 years',
+  },
+];
+
 function getStarLabelText(value: number) {
   return `${value} Star${value !== 1 ? 's' : ''}, ${starLabels[value]}`;
 }
 
 interface IFormInput {
   firstName: string;
-  lastName: string;
-  iceCreamType: { label: string; value: string };
+  isFemale: boolean;
+  lastName?: string;
+  ageRange: number;
+  favoriteMaterialUI: boolean;
+  favoriteChakraUI: boolean;
+  favoriteSemanticUI: boolean;
+  favoriteAntDesign: boolean;
+  starRating: number;
+  yearsUsingReact: number;
 }
+
+const formDefaultValues: IFormInput = {
+  firstName : 'Your Name',
+  isFemale  : false,
+  ageRange  : 30,
+  starRating: 2.5,
+
+  favoriteMaterialUI: true,
+  favoriteChakraUI  : false,
+  favoriteSemanticUI: false,
+  favoriteAntDesign : true,
+  yearsUsingReact   : 1.5,
+
+};
 
 const ProfileForm = () => {
   const reduxDispatch = useDispatch();
@@ -50,50 +87,26 @@ const ProfileForm = () => {
 
   const [uploadProvider, setUploadProvider] = React.useState<UploadFileParams['provider']>('imagekit');
 
-  const { control, handleSubmit } = useForm<IFormInput>();
+  const {
+    control, getValues, handleSubmit, watch, formState: { errors },
+  } = useForm<IFormInput>({
+    mode          : 'onTouched',
+    reValidateMode: 'onChange',
+    delayError    : 500,
+    defaultValues : formDefaultValues,
+  });
+  console.log('🚀 ~ file: ProfileForm.tsx ~ line 69 ~ ProfileForm ~ watch', watch());
 
-  const [checked, setChecked] = React.useState([true, false]);
-
-  const [starValue, setStarValue] = React.useState<number | null>(2);
   const [starHover, setStarHover] = React.useState(-1);
 
-  const sliderMarks = [
-    {
-      value: 1,
-      label: '1 year',
-    },
-    {
-      value: 5,
-      label: '5 year',
-    },
-    {
-      value: 10,
-      label: '10 years',
-    },
-  ];
-
-  // function valuetext(value: number) {
-  //   return `${value}°C`;
-  // }
-
-  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, event.target.checked]);
-  };
-
-  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, checked[1]]);
-  };
-
-  const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([checked[0], event.target.checked]);
-  };
+  const [formData, setFormData] = React.useState<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+    setFormData(data);
   };
 
   const uploadAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.files);
+    // console.log(event.target.files);
     if (event.target.files && event.target.files?.length > 0) {
       reduxDispatch(userSlice.actions.uploadAvatarRequest({
         file    : event.target.files[0],
@@ -105,8 +118,6 @@ const ProfileForm = () => {
 
   const onChangeUploadProvider = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUploadProvider(event.target.value as UploadFileParams['provider']);
-    console.log('🚀 ~ file: ProfileForm.tsx ~ line 81 ~ onChangeUploadProvider ~ event', event.target.value);
-    // setChecked(event.target.checked);
   };
 
   return (
@@ -118,16 +129,22 @@ const ProfileForm = () => {
         sx={{ width: '50rem' }}
       >
 
+        {/* firstName & TextField/basic input */}
         <FormControl>
-
           <Controller
             name="firstName"
             control={control}
-            defaultValue=""
+            rules={{
+              required : 'Name is require',
+              minLength: { value: 3, message: 'Name must be at least 3 characters' },
+              maxLength: { value: 10, message: 'Name must be at most 10 characters' },
+            }}
             render={({ field }) => <TextField label="Name" variant="standard" {...field} />}
           />
+          <FormHelperText error>{errors.firstName?.message}</FormHelperText>
         </FormControl>
 
+        {/* uploadAvatar & RadioGroup */}
         <Stack direction="row">
           {reduxUserData.profile.avatarUrl && (
             <Avatar
@@ -172,29 +189,30 @@ const ProfileForm = () => {
             <FormControlLabel value="cloudinary" control={<Radio color="primary" />} label="Upload to Cloudinary" />
             <FormControlLabel value="imagekit" control={<Radio color="success" />} label="Upload to ImageKit" />
           </RadioGroup>
-
-          {/* <Stack direction="row" spacing={1} alignItems="center">
-            <Typography>Upload to Cloudinary</Typography>
-            <Switch defaultChecked={false}
-            onChange={onChangeUploadProvider} inputProps={{ 'aria-label': 'ant design' }} />
-            <Typography>Upload to ImageKit</Typography>
-          </Stack> */}
-
         </Stack>
 
+        {/* gender & Switch */}
         <FormControl>
           <FormLabel id="demo-upload-provider-radio-group-label">Gender</FormLabel>
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography>Male</Typography>
-            {/* <Switch defaultChecked inputProps={{ 'aria-label': 'Choose gender' }} />
-            <Typography>Male</Typography> */}
-            <FormControlLabel control={<Switch color="error" />} label="Female" />
+            <Controller
+              control={control}
+              name="isFemale"
+              render={({
+                field: { onChange },
+              }) => (
+                <FormControlLabel control={<Switch color="error" onChange={onChange} />} label="Female" />
+              )}
+            />
+
           </Stack>
         </FormControl>
 
+        {/* age & Select */}
         <FormControl>
           <Controller
-            name="iceCreamType"
+            name="ageRange"
             control={control}
             render={({ field }) => (
               <FormControl variant="standard" sx={{ minWidth: 220 }}>
@@ -204,56 +222,91 @@ const ProfileForm = () => {
                   fullWidth
                   labelId="demo-simple-select-standard-label"
                   id="demo-simple-select-standard"
-                  value={20}
-                  // onChange={handleChange}
                   label="Age"
                 >
-                  <MenuItem value="">
-                    <em>None</em>
+                  <MenuItem value={0}>
+                    <em>Do not want to say</em>
                   </MenuItem>
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
+                  <MenuItem value={10}>Ten - Twenty</MenuItem>
+                  <MenuItem value={20}>Twenty - Thirty</MenuItem>
+                  <MenuItem value={30}>Thirty - Forty</MenuItem>
+                  <MenuItem value={40}>Forty - Fifty</MenuItem>
+                  <MenuItem value={50}>Fifty+</MenuItem>
                 </Select>
               </FormControl>
             )}
           />
         </FormControl>
 
+        {/* favorite ui & Checkbox */}
         <FormControl>
           <FormControlLabel
             label="What's your favorite React UI library"
             control={(
               <Checkbox
-                checked={checked[0] && checked[1]}
-                indeterminate={checked[0] !== checked[1]}
-                onChange={handleChange1}
+                checked={getValues('favoriteMaterialUI') && getValues('favoriteChakraUI') && getValues('favoriteAntDesign') && getValues('favoriteSemanticUI')}
+                indeterminate={getValues('favoriteMaterialUI') || getValues('favoriteChakraUI') || getValues('favoriteAntDesign') || getValues('favoriteSemanticUI')}
+                // onChange={handleChange1}
                 color="error"
               />
             )}
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-            <FormControlLabel
-              label="Material-UI"
-              control={<Checkbox checked={checked[0]} onChange={handleChange2} color="success" />}
+            <Controller
+              control={control}
+              name="favoriteMaterialUI"
+              render={({
+                field: { onChange, value },
+              }) => (
+                <FormControlLabel
+                  label="Material-UI"
+                  control={<Checkbox checked={value} onChange={onChange} color="success" />}
+                />
+              )}
             />
-            <FormControlLabel
-              label="Chakra UI"
-              control={<Checkbox checked={checked[1]} onChange={handleChange3} color="default" />}
+            <Controller
+              control={control}
+              name="favoriteChakraUI"
+              render={({
+                field: { onChange, value },
+              }) => (
+                <FormControlLabel
+                  label="Chakra UI"
+                  control={<Checkbox checked={value} onChange={onChange} color="default" />}
+                />
+              )}
             />
 
-            <FormControlLabel
-              label="Ant Design"
-              control={<Checkbox checked={checked[1]} onChange={handleChange3} color="secondary" />}
+            <Controller
+              control={control}
+              name="favoriteAntDesign"
+              render={({
+                field: { onChange, value },
+              }) => (
+                <FormControlLabel
+                  label="Ant Design"
+                  control={<Checkbox checked={value} onChange={onChange} color="secondary" />}
+                />
+              )}
             />
 
-            <FormControlLabel
-              label="Semantic UI"
-              control={<Checkbox checked={checked[1]} onChange={handleChange3} color="warning" />}
+            <Controller
+              control={control}
+              name="favoriteSemanticUI"
+              render={({
+                field: { onChange, value },
+              }) => (
+                <FormControlLabel
+                  label="Semantic UI"
+                  control={<Checkbox checked={value} onChange={onChange} color="warning" />}
+                />
+              )}
             />
+
           </Box>
         </FormControl>
 
+        {/* 5-star & Rating */}
         <Stack direction="row" spacing={1} alignItems="left">
           <Typography>Do you think this NextJs Redux ReactHookForm example is helpful?</Typography>
           <Box
@@ -263,46 +316,87 @@ const ProfileForm = () => {
               alignItems: 'center',
             }}
           >
-            <Rating
-              name="hover-feedback"
-              value={starValue}
-              precision={0.5}
-              getLabelText={getStarLabelText}
-              onChange={(event, newValue) => {
-                setStarValue(newValue);
-              }}
-              onChangeActive={(event, newHover) => {
-                setStarHover(newHover);
-              }}
-              emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+            <Controller
+              control={control}
+              name="starRating"
+              render={({
+                field: { onChange, value },
+              }) => (
+                <Rating
+                  name="hover-feedback"
+                  value={value}
+                  precision={0.5}
+                  getLabelText={getStarLabelText}
+                  onChange={(event, newValue) => {
+                    onChange(event, newValue);
+                  }}
+                  onChangeActive={(event, newHover) => {
+                    setStarHover(newHover);
+                  }}
+                  emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                />
+              )}
             />
-            {starValue !== null && (
-              <Box sx={{ ml: 2 }}>{starLabels[starHover !== -1 ? starHover : starValue]}</Box>
+
+            {getValues('starRating') !== null && (
+              <Box sx={{ ml: 2 }}>
+                {starLabels[starHover !== -1 ? starHover : getValues('starRating')]}
+
+              </Box>
             )}
           </Box>
         </Stack>
 
+        {/* yearsUsingReact & Slider */}
         <FormControl>
           <Typography paragraph variant="subtitle1" component="div">
-            How long have you been using React?
+            How long have you been using React? (
+            {`${getValues('yearsUsingReact')} years`}
+            )
           </Typography>
-          <Slider
-            aria-label="Always visible"
-            defaultValue={1}
-            max={20}
-            // getAriaValueText={valuetext}
-            step={0.1}
-            marks={sliderMarks}
-            valueLabelDisplay="on"
-            sx={{ margin: '0 1rem' }}
+          <Controller
+            control={control}
+            name="yearsUsingReact"
+            render={({
+              field: { onChange },
+            }) => (
+              <Slider
+                aria-label="Always visible"
+                onChange={onChange}
+                max={20}
+                step={0.1}
+                marks={sliderMarks}
+                valueLabelDisplay="on"
+                sx={{ marginLeft: '1.5rem', width: '85vh' }}
+              />
+            )}
           />
+
         </FormControl>
 
+        {/* submit button */}
         <FormControl>
-          <Button variant="contained" endIcon={<SendIcon />} sx={{ margin: '3rem 0', maxWidth: '20rem' }}>
+          <Button
+            type="submit"
+            variant="contained"
+            endIcon={<SendIcon />}
+            sx={{ margin: '3rem 0', maxWidth: '20rem' }}
+          >
             Send
           </Button>
         </FormControl>
+
+        {/* form submit results */}
+        {formData && (
+          <>
+            <Typography paragraph variant="h5" component="div">
+              Form Data after submit:
+            </Typography>
+            <Box component="pre" sx={{ margin: '1rem 4rem !important' }}>
+              { JSON.stringify(formData, null, ' ')}
+            </Box>
+          </>
+        )}
       </Stack>
 
     </form>
