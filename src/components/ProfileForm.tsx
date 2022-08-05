@@ -208,9 +208,9 @@ const ProfileForm = () => {
               control={control}
               name="isFemale"
               render={({
-                field: { onChange },
+                field: { onChange, value },
               }) => (
-                <FormControlLabel control={<Switch color="error" onChange={onChange} />} label="Female" />
+                <FormControlLabel control={<Switch color="error" onChange={onChange} checked={value} />} label="Female" />
               )}
             />
 
@@ -335,7 +335,9 @@ const ProfileForm = () => {
                   value={value}
                   precision={0.5}
                   getLabelText={getStarLabelText}
-                  onChange={onChange}
+                  onChange={(event, val) => {
+                    onChange(val); // ensure it's a number
+                  }}
                   onChangeActive={(event, newHover) => {
                     setStarHover(newHover);
                   }}
