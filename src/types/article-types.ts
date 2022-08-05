@@ -61,10 +61,17 @@ export interface ChildrenProps {
 }
 
 export interface Profile {
-  name: string;
-  username: string;
-  email: string;
-  avatarUrl: string;
+  firstName: string;
+  lastName?: string;
+  avatarUrl?: string;
+  isFemale: boolean;
+  ageRange: number;
+  favoriteMaterialUI: boolean;
+  favoriteChakraUI: boolean;
+  favoriteSemanticUI: boolean;
+  favoriteAntDesign: boolean;
+  starRating: number;
+  yearsUsingReact: number;
 }
 
 export interface AvatarResponse {

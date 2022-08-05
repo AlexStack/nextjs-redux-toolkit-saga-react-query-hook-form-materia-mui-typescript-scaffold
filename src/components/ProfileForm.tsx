@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import StarIcon from '@mui/icons-material/Star';
 import userSlice from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
-import { UploadFileParams, UserSliceType } from '../types/article-types';
+import { Profile, UploadFileParams, UserSliceType } from '../types/article-types';
 
 const starLabels: { [index: string]: string } = {
   0.5: 'Useless',
@@ -49,39 +49,39 @@ function getStarLabelText(value: number) {
   return `${value} Star${value !== 1 ? 's' : ''}, ${starLabels[value]}`;
 }
 
-interface IFormInput {
-  firstName: string;
-  isFemale: boolean;
-  lastName?: string;
-  ageRange: number;
-  favoriteMaterialUI: boolean;
-  favoriteChakraUI: boolean;
-  favoriteSemanticUI: boolean;
-  favoriteAntDesign: boolean;
-  starRating: number;
-  yearsUsingReact: number;
-}
+// interface Profile {
+//   firstName: string;
+//   isFemale: boolean;
+//   lastName?: string;
+//   ageRange: number;
+//   favoriteMaterialUI: boolean;
+//   favoriteChakraUI: boolean;
+//   favoriteSemanticUI: boolean;
+//   favoriteAntDesign: boolean;
+//   starRating: number;
+//   yearsUsingReact: number;
+// }
 
-const formDefaultValues: IFormInput = {
-  firstName : 'Your Name',
-  isFemale  : false,
-  ageRange  : 30,
-  starRating: 2.5,
+// const formDefaultValues: Profile = {
+//   firstName : 'Your Name',
+//   isFemale  : false,
+//   ageRange  : 30,
+//   starRating: 2.5,
 
-  favoriteMaterialUI: true,
-  favoriteChakraUI  : false,
-  favoriteSemanticUI: false,
-  favoriteAntDesign : true,
-  yearsUsingReact   : 1.5,
+//   favoriteMaterialUI: true,
+//   favoriteChakraUI  : false,
+//   favoriteSemanticUI: false,
+//   favoriteAntDesign : true,
+//   yearsUsingReact   : 1.5,
 
-};
+// };
 
 const ProfileForm = () => {
   const reduxDispatch = useDispatch();
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
 
-  // const profileData = reduxUserData.profile;
+  const profileData = reduxUserData.profile;
 
   const [, setShowToaster] = React.useState(false);
 
@@ -89,20 +89,21 @@ const ProfileForm = () => {
 
   const {
     control, getValues, handleSubmit, watch, formState: { errors },
-  } = useForm<IFormInput>({
+  } = useForm<Profile>({
     mode          : 'onTouched',
     reValidateMode: 'onChange',
     delayError    : 500,
-    defaultValues : formDefaultValues,
+    defaultValues : profileData,
   });
   console.log('🚀 ~ file: ProfileForm.tsx ~ line 69 ~ ProfileForm ~ watch', watch());
 
   const [starHover, setStarHover] = React.useState(-1);
 
-  const [formData, setFormData] = React.useState<IFormInput>();
+  const [formData, setFormData] = React.useState<Profile>();
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+  const onSubmit: SubmitHandler<Profile> = (data) => {
     setFormData(data);
+    reduxDispatch(userSlice.actions.updateProfileRequest(data));
   };
 
   const uploadAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -386,7 +387,7 @@ const ProfileForm = () => {
           </Button>
         </FormControl>
 
-        {/* form submit results */}
+        {/* display form data results after submit */}
         {formData && (
           <>
             <Typography paragraph variant="h5" component="div">

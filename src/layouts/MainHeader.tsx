@@ -149,7 +149,7 @@ const MainHeader = () => {
                   {reduxUserData?.profile?.avatarUrl ? (
                     <Avatar src={reduxUserData.profile.avatarUrl} />
                   ) : (
-                    <Avatar alt="Alex">
+                    <Avatar alt={reduxUserData.profile.firstName}>
                       <Person />
                     </Avatar>
                   ) }

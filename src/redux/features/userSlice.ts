@@ -2,21 +2,31 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mainConfig } from '../../configs/main-config';
 import { convertArticleToFavoriteItem } from '../../helpers/article-helper';
 import {
-  Article, AvatarResponse, FavoriteItem, UploadFileParams, UserSliceType,
+  Article, AvatarResponse, FavoriteItem, Profile, UploadFileParams, UserSliceType,
 } from '../../types/article-types';
+
+const defaultProfileValues: Profile = {
+  firstName : 'Alex Your Name',
+  isFemale  : false,
+  ageRange  : 30,
+  starRating: 2.5,
+  avatarUrl : '',
+
+  favoriteMaterialUI: true,
+  favoriteChakraUI  : false,
+  favoriteSemanticUI: false,
+  favoriteAntDesign : true,
+  yearsUsingReact   : 1.5,
+
+};
 
 const initialState: UserSliceType = {
   identityToken: '',
   visitedTimes : 1,
   recentItems  : [],
   favoriteItems: [],
-  profile      : {
-    name     : '',
-    username : '',
-    email    : '',
-    avatarUrl: '',
-  },
-  status: '',
+  profile      : defaultProfileValues,
+  status       : '',
 };
 
 const userSlice = createSlice({
@@ -65,6 +75,15 @@ const userSlice = createSlice({
       state.status = 'loaded';
 
       state.profile = { ...state.profile, avatarUrl: action.payload.avatarUrl };
+    },
+
+    updateProfileRequest: (state, action: PayloadAction<Profile>) => {
+      state.profile = {
+        ...state.profile,
+        ...action.payload,
+        avatarUrl: state.profile.avatarUrl, // avatarUrl is update separately
+      };
+      console.log('🚀 ~ file: userSlice.ts ~ line 57 ~ updateProfileRequest', action, state);
     },
   },
 });
