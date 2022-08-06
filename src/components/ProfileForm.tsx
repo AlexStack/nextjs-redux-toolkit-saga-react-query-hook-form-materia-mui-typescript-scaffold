@@ -16,38 +16,8 @@ import StarIcon from '@mui/icons-material/Star';
 import userSlice, { defaultProfileValues } from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
 import { Profile, UploadFileParams, UserSliceType } from '../types/article-types';
-
-const starLabels: { [index: string]: string } = {
-  0.5: 'Useless',
-  1  : 'Useless+',
-  1.5: 'Poor',
-  2  : 'Poor+',
-  2.5: 'Ok',
-  3  : 'Ok+',
-  3.5: 'Good',
-  4  : 'Good+',
-  4.5: 'Excellent',
-  5  : 'Excellent+',
-};
-
-const sliderMarks = [
-  {
-    value: 1,
-    label: '1 year',
-  },
-  {
-    value: 5,
-    label: '5 year',
-  },
-  {
-    value: 10,
-    label: '10 years',
-  },
-];
-
-function getStarLabelText(value: number) {
-  return `${value} Star${value !== 1 ? 's' : ''}, ${starLabels[value]}`;
-}
+import { PROFILE_STAR_LABELS, PROFILE_SLIDER_MARKS } from '../constants/article-const';
+import { getStarLabelText } from '../helpers/article-helper';
 
 const ProfileForm = () => {
   const reduxDispatch = useDispatch();
@@ -59,14 +29,13 @@ const ProfileForm = () => {
   const [uploadProvider, setUploadProvider] = useState<UploadFileParams['provider']>(reduxUserData.profile.uploadProvider);
 
   const {
-    control, getValues, handleSubmit, watch, reset, formState: { errors },
+    control, getValues, handleSubmit, reset, formState: { errors },
   } = useForm<Profile>({
     mode          : 'onTouched',
     reValidateMode: 'onChange',
     delayError    : 500,
     defaultValues : reduxUserData.profile,
   });
-  console.log('🚀 ~ file: ProfileForm.tsx ~ line 69 ~ ProfileForm ~ watch', watch('starRating'), reduxUserData.profile);
 
   const [starHover, setStarHover] = useState(-1);
 
@@ -226,7 +195,6 @@ const ProfileForm = () => {
               <Checkbox
                 checked={getValues('favoriteMaterialUI') && getValues('favoriteChakraUI') && getValues('favoriteAntDesign') && getValues('favoriteSemanticUI')}
                 indeterminate={getValues('favoriteMaterialUI') || getValues('favoriteChakraUI') || getValues('favoriteAntDesign') || getValues('favoriteSemanticUI')}
-                // onChange={handleChange1}
                 color="error"
               />
             )}
@@ -320,7 +288,7 @@ const ProfileForm = () => {
 
             {getValues('starRating') !== null && (
               <Box sx={{ ml: 2 }}>
-                {starLabels[starHover !== -1 ? starHover : getValues('starRating')]}
+                {PROFILE_STAR_LABELS[starHover !== -1 ? starHover : getValues('starRating')]}
 
               </Box>
             )}
@@ -346,7 +314,7 @@ const ProfileForm = () => {
                 value={value}
                 max={20}
                 step={0.1}
-                marks={sliderMarks}
+                marks={PROFILE_SLIDER_MARKS}
                 valueLabelDisplay="on"
                 sx={{ marginLeft: '1.5rem', width: '85vh' }}
               />

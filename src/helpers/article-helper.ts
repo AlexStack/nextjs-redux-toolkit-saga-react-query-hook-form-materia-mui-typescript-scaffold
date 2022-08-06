@@ -1,5 +1,5 @@
 import { format, parseISO } from 'date-fns';
-import { DEFAULT_IMAGE_URL } from '../constants/article-const';
+import { DEFAULT_IMAGE_URL, PROFILE_STAR_LABELS } from '../constants/article-const';
 import { Article, FavoriteItem } from '../types/article-types';
 
 export const getArticleLink = (article: Article | FavoriteItem) => `/articles/${article.slug}-${article.id}`;
@@ -49,3 +49,5 @@ export const convertArticleToFavoriteItem = (article: Article) => {
 };
 
 export const getFormattedDate = (dateIso: string, formatStr = 'MM/dd/yyyy') => format(parseISO(dateIso), formatStr);
+
+export const getStarLabelText = (value: number) => `${value} Star${value !== 1 ? 's' : ''}, ${PROFILE_STAR_LABELS[value]}`;
