@@ -12,6 +12,7 @@ export const defaultProfileValues: Profile = {
   starRating: 2.5,
   avatarUrl : '',
 
+  uploadProvider    : 'imagekit',
   favoriteMaterialUI: true,
   favoriteChakraUI  : false,
   favoriteSemanticUI: false,

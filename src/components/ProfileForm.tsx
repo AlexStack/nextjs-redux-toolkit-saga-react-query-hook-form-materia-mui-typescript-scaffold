@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Select from '@mui/material/Select';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import {
@@ -49,44 +49,14 @@ function getStarLabelText(value: number) {
   return `${value} Star${value !== 1 ? 's' : ''}, ${starLabels[value]}`;
 }
 
-// interface Profile {
-//   firstName: string;
-//   isFemale: boolean;
-//   lastName?: string;
-//   ageRange: number;
-//   favoriteMaterialUI: boolean;
-//   favoriteChakraUI: boolean;
-//   favoriteSemanticUI: boolean;
-//   favoriteAntDesign: boolean;
-//   starRating: number;
-//   yearsUsingReact: number;
-// }
-
-// const formDefaultValues: Profile = {
-//   firstName : 'Your Name',
-//   isFemale  : false,
-//   ageRange  : 30,
-//   starRating: 2.5,
-
-//   favoriteMaterialUI: true,
-//   favoriteChakraUI  : false,
-//   favoriteSemanticUI: false,
-//   favoriteAntDesign : true,
-//   yearsUsingReact   : 1.5,
-
-// };
-
 const ProfileForm = () => {
   const reduxDispatch = useDispatch();
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
 
-  // const profileData = reduxUserData.profile;
-  // const [profileData, setProfileData] = React.useState<Profile>(reduxUserData.profile);
+  const [, setShowToaster] = useState(false);
 
-  const [, setShowToaster] = React.useState(false);
-
-  const [uploadProvider, setUploadProvider] = React.useState<UploadFileParams['provider']>('imagekit');
+  const [uploadProvider, setUploadProvider] = useState<UploadFileParams['provider']>(reduxUserData.profile.uploadProvider);
 
   const {
     control, getValues, handleSubmit, watch, reset, formState: { errors },
@@ -98,16 +68,17 @@ const ProfileForm = () => {
   });
   console.log('🚀 ~ file: ProfileForm.tsx ~ line 69 ~ ProfileForm ~ watch', watch('starRating'), reduxUserData.profile);
 
-  const [starHover, setStarHover] = React.useState(-1);
+  const [starHover, setStarHover] = useState(-1);
 
-  const [formData, setFormData] = React.useState<Profile>();
+  const [demoData, setDemoData] = useState<Profile>();
 
   const onSubmit: SubmitHandler<Profile> = (data) => {
-    setFormData(data);
-    reduxDispatch(userSlice.actions.updateProfileRequest(data));
+    const newData = { ...data, uploadProvider };
+    setDemoData(newData);
+    reduxDispatch(userSlice.actions.updateProfileRequest(newData));
   };
 
-  const uploadAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadAvatar = (event: ChangeEvent<HTMLInputElement>) => {
     // console.log(event.target.files);
     if (event.target.files && event.target.files?.length > 0) {
       reduxDispatch(userSlice.actions.uploadAvatarRequest({
@@ -118,13 +89,14 @@ const ProfileForm = () => {
     }
   };
 
-  const onChangeUploadProvider = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeUploadProvider = (event: ChangeEvent<HTMLInputElement>) => {
     setUploadProvider(event.target.value as UploadFileParams['provider']);
   };
 
   useEffect(() => {
     if (defaultProfileValues !== reduxUserData.profile) {
       reset(reduxUserData.profile); // reload page will not showing saved data if not reset
+      setUploadProvider(reduxUserData.profile.uploadProvider);
     }
   }, [reduxUserData.profile, reset]);
 
@@ -185,7 +157,7 @@ const ProfileForm = () => {
               {reduxUserData.status === 'loading' ? 'Uploading...' : 'Choose an image'}
             </Typography>
           </Stack>
-
+          {/* an example of use normal Radio field together with react-hook-form */}
           <RadioGroup
             row={false}
             defaultValue="imagekit"
@@ -396,13 +368,13 @@ const ProfileForm = () => {
         </FormControl>
 
         {/* display form data results after submit */}
-        {formData && (
+        {demoData && (
           <>
             <Typography paragraph variant="h5" component="div">
               Form Data after submit:
             </Typography>
             <Box component="pre" sx={{ margin: '1rem 4rem !important' }}>
-              { JSON.stringify(formData, null, ' ')}
+              { JSON.stringify(demoData, null, ' ')}
             </Box>
           </>
         )}

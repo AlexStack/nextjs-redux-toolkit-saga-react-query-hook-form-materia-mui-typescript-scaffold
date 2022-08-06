@@ -64,6 +64,7 @@ export interface Profile {
   firstName: string;
   lastName?: string;
   avatarUrl?: string;
+  uploadProvider: 'cloudinary' | 'imagekit';
   isFemale: boolean;
   ageRange: number;
   favoriteMaterialUI: boolean;
