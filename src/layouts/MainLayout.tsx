@@ -7,14 +7,10 @@ import MainHeader from './MainHeader';
 import MainFooter from './MainFooter';
 import { ChildrenProps } from '../types/article-types';
 
-interface Props extends ChildrenProps {
-  title?: string;
-}
-
-const MainLayout = ({ title = '', children }: Props) => (
+const MainLayout = ({ children }: ChildrenProps) => (
   <>
     <CssBaseline />
-    <Container maxWidth="xl" title={title}>
+    <Container maxWidth="xl">
       <Grid
         container
         spacing={0}

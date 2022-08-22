@@ -1,3 +1,5 @@
+export const SITE_NAME = 'NextJs Redux Starter';
+
 export const BASE_API_URI = 'https://dev.to/api';
 
 export const ITEMS_PER_PAGE = 20;

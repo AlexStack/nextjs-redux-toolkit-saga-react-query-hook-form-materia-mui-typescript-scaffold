@@ -15,6 +15,7 @@ import { mainConfig } from '../../configs/main-config';
 import getIdFromSlug from '../../utils/get-id-from-slug';
 import ArticleDetail from '../../components/ArticleDetail';
 import userSlice from '../../redux/features/userSlice';
+import HeadMeta from '../../layouts/HeadMeta';
 
 const ArticleDetails: NextPage = ({
   serverRedux,
@@ -44,6 +45,7 @@ const ArticleDetails: NextPage = ({
 
   return (
     <MainLayout>
+      <HeadMeta title={articleDetail?.title} article={articleDetail} />
       {articleDetail && <ArticleDetail article={articleDetail} />}
     </MainLayout>
   );

@@ -86,7 +86,7 @@ const ProfileForm = () => {
             rules={{
               required : 'Name is require',
               minLength: { value: 3, message: 'Name must be at least 3 characters' },
-              maxLength: { value: 10, message: 'Name must be at most 10 characters' },
+              maxLength: { value: 20, message: 'Name must be at most 20 characters' },
             }}
             render={({ field }) => <TextField label="Name" variant="standard" {...field} />}
           />

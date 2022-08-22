@@ -13,6 +13,7 @@ import getRouterParam from '../../../utils/get-router-param';
 import { DEFAULT_KEYWORD, TOP_MENU_TAGS, ITEMS_PER_PAGE } from '../../../constants/article-const';
 import { mainConfig } from '../../../configs/main-config';
 import userSlice from '../../../redux/features/userSlice';
+import HeadMeta from '../../../layouts/HeadMeta';
 
 const Articles: NextPage = () => {
   const router      = useRouter();
@@ -58,6 +59,7 @@ const Articles: NextPage = () => {
 
   return (
     <MainLayout>
+      <HeadMeta title={`Tag:${originalTag}`} article={dataItems[0]} />
       <ArticleImageList
         dataItems={dataItems}
         tag={originalTag}

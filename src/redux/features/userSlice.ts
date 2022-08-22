@@ -6,7 +6,7 @@ import {
 } from '../../types/article-types';
 
 export const defaultProfileValues: Profile = {
-  firstName : 'Alex Your Name',
+  firstName : '',
   isFemale  : false,
   ageRange  : 30,
   starRating: 2.5,

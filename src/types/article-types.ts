@@ -12,6 +12,16 @@ export interface UploadFileParams {
   provider: 'cloudinary' | 'imagekit';
 }
 
+export interface PageMeta {
+  title: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  keywords?: string[];
+  type?: string;
+  locale?: string;
+}
+
 export interface FavoriteItem
   extends Pick<Article, 'id' | 'title' | 'description' | 'tags' | 'cover_image' | 'slug' | 'published_at'> {
   visited_at: string;
