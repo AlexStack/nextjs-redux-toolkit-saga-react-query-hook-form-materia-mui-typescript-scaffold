@@ -99,11 +99,13 @@ const MainHeader = () => {
             >
               {TOP_MENU_TAGS.map((tag) => (
                 <MenuItem key={tag} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <Link href={getTagLink(tag)} passHref>
+
+                  <Link href={getTagLink(tag)} passHref>
+                    <Typography textAlign="center" component="a" sx={{ color: 'black', textDecoration: 'none' }}>
                       {tag}
-                    </Link>
-                  </Typography>
+                    </Typography>
+                  </Link>
+
                 </MenuItem>
               ))}
             </Menu>

@@ -9,7 +9,7 @@ import { ChildrenProps } from '../types/article-types';
 const MainLayout = ({ children }: ChildrenProps) => (
   <>
     <CssBaseline />
-    <Container maxWidth="xl" sx={{ padding: 0, width: '100vw' }}>
+    <Container disableGutters maxWidth={false} sx={{ width: '100vw' }}>
 
       <MainHeader />
       <Box flex={1} overflow="auto" justifyContent="space-around" style={{ minHeight: '80vh', width: '90vw', margin: '0 auto' }}>
