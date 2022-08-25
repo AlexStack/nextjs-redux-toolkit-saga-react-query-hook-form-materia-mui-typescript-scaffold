@@ -7,6 +7,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
 import styled from '@emotion/styled';
 import router from 'next/router';
+import { Paper } from '@mui/material';
 
 const MainFooter = () => {
   const StyledBottomNavigationAction = styled(BottomNavigationAction)(`
@@ -21,7 +22,12 @@ const MainFooter = () => {
   };
 
   return (
-    <Box sx={{ width: 500 }}>
+    <Paper
+      sx={{
+        position: 'fixed', bottom: 0, left: 0, right: 0,
+      }}
+      elevation={6}
+    >
       <BottomNavigation showLabels>
 
         <BottomNavigationAction
@@ -41,7 +47,7 @@ const MainFooter = () => {
         />
 
       </BottomNavigation>
-    </Box>
+    </Paper>
   );
 };
 
