@@ -125,7 +125,7 @@ const MainHeader = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            React
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {TOP_MENU_TAGS.map((tag) => (
