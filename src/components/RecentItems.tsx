@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   IconButton, Divider, List, ListItem, Avatar, Tooltip, styled,
-  ListItemAvatar, ListItemText, Typography, Breadcrumbs, Button,
+  ListItemAvatar, ListItemText, Typography, Breadcrumbs, Button, Box,
 } from '@mui/material';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Image from 'next/image';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import type { ChildrenProps, FavoriteItem, UserSliceType } from '../types/article-types';
 import { getArticleImgUrl, getArticleLink } from '../helpers/article-helper';
 import { ReduxState } from '../redux/store';
@@ -22,6 +24,15 @@ const StyledList = styled(List)({
     backgroundColor: '#f1ebeb',
   },
 });
+
+dayjs.extend(relativeTime);
+
+const fromDate = (date?: string) => {
+  if (!date) {
+    return 'n/a';
+  }
+  return dayjs().from(dayjs(date));
+};
 
 export const PageBreadcrumbs = ({ children }:ChildrenProps) => (
   <Breadcrumbs aria-label="breadcrumb">
@@ -93,14 +104,17 @@ export const PageListItems = ({
                 </Tooltip>
               )}
               key={item.id}
+              sx={{
+                flexDirection: { xs: 'column', md: 'row' },
+              }}
             >
               <ListItemAvatar sx={{ paddingRight: '1rem' }}>
                 { isRecentPage ? (
                   <Image
                     src={getArticleImgUrl(item)}
                     alt={item.author}
-                    width={150}
-                    height={80}
+                    width={250}
+                    height={120}
                   />
                 ) : (
                   <Avatar alt={item.author} src={item.author_avatar} />
@@ -120,24 +134,26 @@ export const PageListItems = ({
                       >
                         {item.author}
                       </Typography>
-                      {isRecentPage ? 'Viewed at:' : 'Favorite at:'}
+                      {isRecentPage ? 'Viewed at:' : 'Favorited at:'}
                       <Typography
                         sx={{ display: 'inline', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}
                         component="span"
                         variant="body2"
                         color="text.primary"
                       >
-                        {isRecentPage ? item.visited_at : item.favorite_at}
+                        {isRecentPage ? fromDate(item.visited_at) : fromDate(item.favorite_at)}
                       </Typography>
-                      Tags:
-                      <Typography
-                        sx={{ display: 'inline', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        {item.tags?.join(',')}
-                      </Typography>
+                      <Box sx={{ display: { xs: 'none', md: 'inline-block' } }}>
+                        Tags:
+                        <Typography
+                          sx={{ display: 'inline', paddingLeft: '0.5rem', paddingRight: '0.5rem' }}
+                          component="span"
+                          variant="body2"
+                          color="text.primary"
+                        >
+                          {item.tags?.join(', ')}
+                        </Typography>
+                      </Box>
                       <Typography
                         sx={{ display: 'block' }}
                         component="span"
