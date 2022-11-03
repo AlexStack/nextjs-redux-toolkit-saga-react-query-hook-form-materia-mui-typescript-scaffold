@@ -3,7 +3,7 @@ import {
   IconButton, Tooltip,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { FavoriteBorder } from '@mui/icons-material';
+import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import type { Article, FavoriteItem, UserSliceType } from '../types/article-types';
 import { ReduxState } from '../redux/store';
 import userSlice from '../redux/features/userSlice';
@@ -11,7 +11,7 @@ import ActionToaster from './ActionToaster';
 
 interface FavoriteItemHeartIconProps {
   item: Article | FavoriteItem;
-  itemName: string;
+  itemName?: string;
 }
 
 const FavoriteItemHeartIcon = ({ item, itemName = 'article' }: FavoriteItemHeartIconProps) => {
@@ -53,13 +53,14 @@ const FavoriteItemHeartIcon = ({ item, itemName = 'article' }: FavoriteItemHeart
           color={isFavorite ? 'error' : 'default'}
           onClick={(e) => onClickFavorite(e)}
           sx={{
-            position       : 'absolute',
-            top            : (theme) => theme.spacing(1),
-            right          : (theme) => theme.spacing(1),
-            backgroundColor: 'rgba(255, 255, 255, 0.6)',
+            position  : 'absolute',
+            top       : (theme) => theme.spacing(1),
+            right     : (theme) => theme.spacing(1),
+            background: 'rgba(255, 255, 255, 0.6)',
           }}
         >
-          <FavoriteBorder />
+
+          {isFavorite ? <FavoriteBorder /> : <Favorite />}
         </IconButton>
       </Tooltip>
 
