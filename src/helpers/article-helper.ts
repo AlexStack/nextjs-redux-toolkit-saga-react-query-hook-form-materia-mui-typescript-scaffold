@@ -38,7 +38,7 @@ export const convertArticleToFavoriteItem = (article: Article) => {
     title        : article.title,
     description  : article.description,
     tags         : article.tags,
-    tag_list     : Array.isArray(article.tags) ? article.tags.join(', ') : article.tags,
+    tag_list     : Array.isArray(article.tags) ? article.tags.join(', ') : article.tags || '',
     cover_image  : article.cover_image,
     slug         : article.slug,
     published_at : article.published_at,
