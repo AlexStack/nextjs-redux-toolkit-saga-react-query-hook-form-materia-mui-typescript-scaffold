@@ -1,4 +1,5 @@
 import { format, parseISO } from 'date-fns';
+import { isArray } from 'util';
 import { DEFAULT_IMAGE_URL, PROFILE_STAR_LABELS } from '../constants/article-const';
 import { Article, FavoriteItem } from '../types/article-types';
 
@@ -37,7 +38,7 @@ export const convertArticleToFavoriteItem = (article: Article) => {
     title        : article.title,
     description  : article.description,
     tags         : article.tags,
-    tag_list     : article.tags?.join(', ') || '',
+    tag_list     : Array.isArray(article.tags) ? article.tags.join(', ') : article.tags,
     cover_image  : article.cover_image,
     slug         : article.slug,
     published_at : article.published_at,

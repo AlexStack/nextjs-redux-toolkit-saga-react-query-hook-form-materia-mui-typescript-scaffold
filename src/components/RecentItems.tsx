@@ -151,7 +151,7 @@ export const PageListItems = ({
                           variant="body2"
                           color="text.primary"
                         >
-                          {item.tags?.join(', ')}
+                          {Array.isArray(item.tags) ? item.tags.join(', ') : item.tags}
                         </Typography>
                       </Box>
                       <Typography

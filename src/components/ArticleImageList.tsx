@@ -6,8 +6,11 @@ import {
 import Link from 'next/link';
 import ReadMoreIcon from '@mui/icons-material/ReadMore';
 import WarningIcon from '@mui/icons-material/Warning';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { FavoriteBorder } from '@mui/icons-material';
 import type { Article } from '../types/article-types';
 import { getArticleImgUrl, getArticleLink, getFormattedDate } from '../helpers/article-helper';
+import FavoriteItemHeartIcon from './FavoriteItemHeartIcon';
 
 interface Props {
   tag: string;
@@ -50,6 +53,7 @@ const ArticleImageList = ({
                 </IconButton>
               )}
             />
+            <FavoriteItemHeartIcon item={item} />
           </ImageListItem>
         </Link>
       );
