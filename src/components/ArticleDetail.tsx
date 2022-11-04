@@ -56,7 +56,7 @@ const ArticleDetail = ({ article }:Props) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 1000, marginTop: 5 }}>
+    <Card sx={{ maxWidth: 1000, marginTop: 5, marginBottom: 4 }}>
       <CardHeader
         avatar={(
           <Avatar
@@ -123,12 +123,12 @@ const ArticleDetail = ({ article }:Props) => {
                 )}
                 label={article.user.name}
                 variant="outlined"
-                sx={{ marginRight: '1rem', background: '#f5f5f5' }}
+                sx={{ margin: '0 1rem 1rem 0', background: '#f5f5f5' }}
               />
 
               {allTags.map((tag) => (
                 <Link href={getTagLink(tag)} passHref key={`${tag}-${Math.random()}`}>
-                  <Chip label={tag} variant="outlined" component="a" sx={{ marginRight: '1rem' }} />
+                  <Chip label={tag} variant="outlined" component="a" sx={{ margin: '0 1rem 1rem 0' }} />
                 </Link>
               ))}
             </Box>
@@ -141,7 +141,7 @@ const ArticleDetail = ({ article }:Props) => {
         aria-label="like"
         sx={{
           position: 'fixed',
-          bottom  : (theme) => theme.spacing(5),
+          bottom  : (theme) => theme.spacing(10),
           right   : (theme) => theme.spacing(5),
         }}
         color={isFavorite ? 'inherit' : 'default'}

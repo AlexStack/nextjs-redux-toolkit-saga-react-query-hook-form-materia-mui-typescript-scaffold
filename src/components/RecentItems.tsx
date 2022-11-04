@@ -73,7 +73,7 @@ export const PageListItems = ({
       align="center"
       sx={{ fontSize: '3rem', fontWeight: 700 }}
     >
-      {isRecentPage ? 'Recent Viewed Articles' : 'My Favorites'}
+      {isRecentPage ? 'Recent Viewed' : 'My Favorites'}
     </Typography>
     <StyledList sx={{
       width: '100%', maxWidth: 1000, marginTop: 5, bgColor: 'background.paper',
