@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
   timeout: 4999,
   headers: {
     'Content-Type': 'application/json',
-    'api-key'     : process.env.NEXT_PUBLIC_DEV_DOT_TO_API_KEY || 'Missing dev.to api key',
+    // 'api-key'     : process.env.NEXT_PUBLIC_DEV_DOT_TO_API_KEY || 'Missing dev.to api key',
     accept        : 'application/vnd.forem.api-v1+json',
   },
 });
