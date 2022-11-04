@@ -39,7 +39,6 @@ const cloudinaryAuth = (
   const folder    = req.body.folder as string || 'default_folder';
 
   const serializedSortedParameters = `eager=${eager}&folder=${folder}&public_id=${publicId}&timestamp=${timestamp}${keys.apiSecret}`;
-  // console.log('🚀 ~ file: cloudinary-auth.ts ~ line 42 ~ serializedSortedParameters', serializedSortedParameters, req.body);
 
   const signature = crypto.createHash('sha1').update(serializedSortedParameters, 'binary').digest('hex');
 
