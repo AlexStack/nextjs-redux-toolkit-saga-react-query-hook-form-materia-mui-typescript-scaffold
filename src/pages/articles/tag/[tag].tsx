@@ -94,7 +94,7 @@ export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticPro
   (store) => async ({ params }) => {
     const tag  = getRouterParam(params?.tag, DEFAULT_KEYWORD).toLowerCase();
     const page = parseInt(getRouterParam(params?.page, '1'), 10);
-    console.log('🚀 ~ file: [tag].tsx ~ line 75 ~ params', params);
+    // console.log('🚀 ~ file: [tag].tsx ~ line 75 ~ params', params);
 
     store.dispatch(articleSlice.actions.getArticlesRequest({ tag, page }));
     store.dispatch(END);

@@ -11,6 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { useStore } from 'react-redux';
 import { ReduxStore, reduxWrapper } from '../redux/store';
 import userSlice from '../redux/features/userSlice';
+import { IS_DEV } from '../constants/article-const';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const reduxStore    = useStore();
@@ -55,7 +56,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
           </Hydrate>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {IS_DEV && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
       )}
     </PersistGate>

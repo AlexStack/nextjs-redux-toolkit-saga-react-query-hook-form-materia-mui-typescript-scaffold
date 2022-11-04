@@ -44,3 +44,5 @@ export const PROFILE_SLIDER_MARKS = [
     label: '10 years',
   },
 ];
+
+export const IS_DEV = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
