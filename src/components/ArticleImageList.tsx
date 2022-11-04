@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import {
   ImageList, ImageListItem, ImageListItemBar, IconButton, Typography, Button, Box,
@@ -24,8 +24,18 @@ const ArticleImageList = ({
 }:Props) => {
   const windowSize = useWindowSize();
 
+  const [isSmallScreen, setIsSmallScreen] = React.useState(true);
+
+  useEffect(() => {
+    if (windowSize.width < 1000) {
+      setIsSmallScreen(true);
+    } else {
+      setIsSmallScreen(false);
+    }
+  }, [windowSize.width]);
+
   return (
-    <ImageList cols={windowSize.width > 1000 ? 2 : 1} gap={windowSize.width > 1000 ? 18 : 0} sx={{ marginBottom: '8rem' }}>
+    <ImageList cols={isSmallScreen ? 1 : 2} gap={isSmallScreen ? 0 : 16} sx={{ marginBottom: '8rem' }}>
       <ImageListItem key="Subheader" cols={2}>
         <Typography paragraph variant="h1" component="h1" sx={{ fontSize: '2rem', fontWeight: 600, textAlign: 'center' }}>
           {tag}
