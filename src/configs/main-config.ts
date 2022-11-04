@@ -1,4 +1,5 @@
-const isDevEnv     = process.env.NEXT_PUBLIC_NODE_ENV !== 'production';
+import { IS_DEV } from '../constants/article-const';
+
 const isClientSide = typeof window !== 'undefined';
 
 export const mainConfig = {
@@ -13,20 +14,20 @@ export const mainConfig = {
   // Redux PersistConfig props
   // set enabled to false can disable persist (requires remove PersistGate in _app.tx)
   reduxPersistConfigs: {
-    key: 'AlexAppData', version: 0.4, debug: isDevEnv, enabled: true,
+    key: 'AlexAppData', version: 0.4, debug: IS_DEV, enabled: true,
   },
 
   // max number of recent visited articles to save in local storage
   maxRecentItems: 40,
 
   // article list page re-generate every xxx seconds
-  listPageRefreshInterval: 3600 * 5,
+  listPageRefreshInterval: IS_DEV ? 600 : 3600 * 24 * 2,
 
   // article detail page re-generate every xxx seconds
-  detailPageRefreshInterval: 3600 * 24,
+  detailPageRefreshInterval: IS_DEV ? 600 : 3600 * 24 * 30,
 
   // is dev env, we can force it to true to debug -> isDevEnv:true
-  isDevEnv,
+  isDevEnv: IS_DEV,
 
   // is client side, we can force it to true to debug -> isClientSide:true
   isClientSide,

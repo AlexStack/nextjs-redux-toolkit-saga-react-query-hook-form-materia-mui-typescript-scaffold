@@ -1,5 +1,4 @@
 import { format, parseISO } from 'date-fns';
-import { isArray } from 'util';
 import { DEFAULT_IMAGE_URL, PROFILE_STAR_LABELS } from '../constants/article-const';
 import { Article, FavoriteItem } from '../types/article-types';
 

@@ -8,7 +8,9 @@ import ReadMoreIcon from '@mui/icons-material/ReadMore';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useWindowSize } from 'react-use';
 import type { Article } from '../types/article-types';
-import { getArticleImgUrl, getArticleLink, getFormattedDate } from '../helpers/article-helper';
+import {
+  getArticleImgUrl, getArticleLink, getFormattedDate,
+} from '../helpers/article-helper';
 import FavoriteItemHeartIcon from './FavoriteItemHeartIcon';
 
 interface Props {
@@ -34,6 +36,8 @@ const ArticleImageList = ({
     }
   }, [windowSize.width]);
 
+  const imageItems = dataItems.filter((item) => item.cover_image && item.cover_image.trim() !== '');
+
   return (
     <ImageList cols={isSmallScreen ? 1 : 2} gap={isSmallScreen ? 0 : 16} sx={{ marginBottom: '8rem' }}>
       <ImageListItem key="Subheader" cols={2}>
@@ -41,7 +45,8 @@ const ArticleImageList = ({
           {tag}
         </Typography>
       </ImageListItem>
-      {dataItems && dataItems.map((item) => {
+
+      {imageItems && imageItems.map((item) => {
         const imageUrl = getArticleImgUrl(item);
         const subtitle = `${getFormattedDate(item.published_at)}, ${item.reading_time_minutes} minutes to read`;
         return (
@@ -70,6 +75,7 @@ const ArticleImageList = ({
           </Link>
         );
       })}
+
       <ImageListItem key="load-more" cols={2}>
         <Typography
           paragraph
@@ -79,7 +85,7 @@ const ArticleImageList = ({
             fontSize: '1rem', fontWeight: 400, textAlign: 'center', marginTop: '1rem',
           }}
         >
-          {`Total ${dataItems.length} ${tag} articles`}
+          {`Total ${imageItems.length} ${tag} articles`}
         </Typography>
 
         <Box textAlign="center">
