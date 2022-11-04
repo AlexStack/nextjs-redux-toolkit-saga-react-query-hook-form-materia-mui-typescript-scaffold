@@ -2,14 +2,13 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import {
   Avatar, Box, Card, CardActions, CardContent,
-  CardHeader, CardMedia, Chip, Collapse, Fab, Tooltip, Typography,
+  CardHeader, CardMedia, Chip, Collapse, Fab, Typography,
 } from '@mui/material';
 import MoreIcon from '@mui/icons-material/More';
 import { useRouter } from 'next/router';
@@ -18,9 +17,8 @@ import { Article, UserSliceType } from '../types/article-types';
 import {
   getArticleImgUrl, getArticleTags, getFormattedDate, getTagLink,
 } from '../helpers/article-helper';
-import userSlice from '../redux/features/userSlice';
 import { ReduxState } from '../redux/store';
-import ActionToaster from './ActionToaster';
+import FavoriteItemHeartIcon from './FavoriteItemHeartIcon';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -43,13 +41,11 @@ interface Props {
 }
 
 const ArticleDetail = ({ article }:Props) => {
-  const router        = useRouter();
-  const reduxDispatch = useDispatch();
+  const router = useRouter();
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
 
-  const [expanded, setExpanded]       = useState(true);
-  const [showToaster, setShowToaster] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const isFavorite = reduxUserData.favoriteItems.some((item) => item.id === article.id);
 
@@ -57,11 +53,6 @@ const ArticleDetail = ({ article }:Props) => {
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
-  };
-
-  const onClickFavorite = () => {
-    reduxDispatch(userSlice.actions.favoriteItemRequest(article));
-    setShowToaster(true);
   };
 
   return (
@@ -96,13 +87,7 @@ const ArticleDetail = ({ article }:Props) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton
-          aria-label="add to favorites"
-          color={isFavorite ? 'error' : 'default'}
-          onClick={onClickFavorite}
-        >
-          <FavoriteIcon />
-        </IconButton>
+        <FavoriteItemHeartIcon item={article} iconButtonSx={{}} />
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
@@ -159,33 +144,18 @@ const ArticleDetail = ({ article }:Props) => {
           bottom  : (theme) => theme.spacing(5),
           right   : (theme) => theme.spacing(5),
         }}
-        color={isFavorite ? 'error' : 'default'}
-        onClick={onClickFavorite}
+        color={isFavorite ? 'inherit' : 'default'}
       >
-        <Tooltip
-          title={isFavorite ? 'Remove this article from my favorites' : 'Favorite this article!'}
-          placement="left"
-          PopperProps={{
-            modifiers: [
-              {
-                name   : 'offset',
-                options: {
-                  offset: [0, 10],
-                },
-              },
-            ],
+        <FavoriteItemHeartIcon
+          item={article}
+          iconButtonSx={{
+            background: 'transparent',
+            ':hover'  : {
+              background: 'transparent',
+            },
           }}
-        >
-          <FavoriteIcon />
-        </Tooltip>
+        />
       </Fab>
-
-      <ActionToaster
-        showToaster={showToaster}
-        setShowToaster={setShowToaster}
-        message={`This article ${isFavorite ? 'added' : 'removed'} to your favorites`}
-        alertColor={isFavorite ? 'success' : 'warning'}
-      />
 
     </Card>
   );

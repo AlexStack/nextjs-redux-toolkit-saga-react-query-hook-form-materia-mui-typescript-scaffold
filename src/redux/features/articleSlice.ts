@@ -15,7 +15,7 @@ const articleSlice = createSlice({
   reducers: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getArticlesRequest: (state, action: PayloadAction<ArticleFilterParams>) => {
-      console.log('🚀 ~ file: articleSlice.ts ~ line 16 ~ action', action);
+      // console.log('🚀 ~ file: articleSlice.ts ~ line 16 ~ action', action);
       state.status = 'loading';
 
       state.searchTag = action.payload.tag as string;
@@ -24,7 +24,7 @@ const articleSlice = createSlice({
       data:Article[], params:ArticleFilterParams
     }>) => {
       const { data, params } = action.payload;
-      console.log('🚀 ~ file: articleSlice.ts ~ line 23 ~ params', params);
+      // console.log('🚀 ~ file: articleSlice.ts ~ line 23 ~ params', params);
 
       state.lists = params.page && params.page > 1
         ? getUniqueAryByKey([...state.lists, ...data], 'id')

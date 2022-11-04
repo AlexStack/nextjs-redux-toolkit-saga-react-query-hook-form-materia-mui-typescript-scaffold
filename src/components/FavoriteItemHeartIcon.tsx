@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  IconButton, Tooltip,
+  IconButton, SxProps, Theme, Tooltip,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
@@ -12,9 +12,10 @@ import ActionToaster from './ActionToaster';
 interface FavoriteItemHeartIconProps {
   item: Article | FavoriteItem;
   itemName?: string;
+  iconButtonSx?: SxProps<Theme> | undefined;
 }
 
-const FavoriteItemHeartIcon = ({ item, itemName = 'article' }: FavoriteItemHeartIconProps) => {
+const FavoriteItemHeartIcon = ({ item, itemName = 'article', iconButtonSx }: FavoriteItemHeartIconProps) => {
   const reduxDispatch = useDispatch();
 
   const reduxUserData:UserSliceType = useSelector((reduxState: ReduxState) => reduxState.user);
@@ -30,6 +31,16 @@ const FavoriteItemHeartIcon = ({ item, itemName = 'article' }: FavoriteItemHeart
 
     reduxDispatch(userSlice.actions.favoriteItemRequest(item));
     setShowToaster(true);
+  };
+
+  const IconButtonSx = iconButtonSx ?? {
+    position  : 'absolute',
+    top       : '0.5rem',
+    right     : '0.5rem',
+    background: 'rgba(255, 255, 255, 0.4)',
+    ':hover'  : {
+      background: 'rgba(255, 255, 255, 0.8)',
+    },
   };
 
   return (
@@ -52,15 +63,7 @@ const FavoriteItemHeartIcon = ({ item, itemName = 'article' }: FavoriteItemHeart
           aria-label="like"
           color={isFavorite ? 'error' : 'default'}
           onClick={(e) => onClickFavorite(e)}
-          sx={{
-            position  : 'absolute',
-            top       : (theme) => theme.spacing(1),
-            right     : (theme) => theme.spacing(1),
-            background: 'rgba(255, 255, 255, 0.4)',
-            ':hover'  : {
-              background: 'rgba(255, 255, 255, 0.8)',
-            },
-          }}
+          sx={IconButtonSx}
         >
 
           {isFavorite ? <Favorite /> : <FavoriteBorder />}
