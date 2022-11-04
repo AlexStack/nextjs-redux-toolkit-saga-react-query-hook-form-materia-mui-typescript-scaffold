@@ -25,7 +25,7 @@ const ArticleImageList = ({
   const windowSize = useWindowSize();
 
   return (
-    <ImageList cols={windowSize.width > 1000 ? 2 : 1} gap={windowSize.width > 1000 ? 18 : 0}>
+    <ImageList cols={windowSize.width > 1000 ? 2 : 1} gap={windowSize.width > 1000 ? 18 : 0} sx={{ marginBottom: '8rem' }}>
       <ImageListItem key="Subheader" cols={2}>
         <Typography paragraph variant="h1" component="h1" sx={{ fontSize: '2rem', fontWeight: 600, textAlign: 'center' }}>
           {tag}
