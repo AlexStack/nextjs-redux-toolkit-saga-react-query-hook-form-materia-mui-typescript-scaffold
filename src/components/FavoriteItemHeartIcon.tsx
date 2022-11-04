@@ -56,11 +56,14 @@ const FavoriteItemHeartIcon = ({ item, itemName = 'article' }: FavoriteItemHeart
             position  : 'absolute',
             top       : (theme) => theme.spacing(1),
             right     : (theme) => theme.spacing(1),
-            background: 'rgba(255, 255, 255, 0.6)',
+            background: 'rgba(255, 255, 255, 0.4)',
+            ':hover'  : {
+              background: 'rgba(255, 255, 255, 0.8)',
+            },
           }}
         >
 
-          {isFavorite ? <FavoriteBorder /> : <Favorite />}
+          {isFavorite ? <Favorite /> : <FavoriteBorder />}
         </IconButton>
       </Tooltip>
 
