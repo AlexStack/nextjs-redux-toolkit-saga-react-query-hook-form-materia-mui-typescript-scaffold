@@ -16,7 +16,7 @@ const Home:NextPage = () => (
       Welcome to Next.js!
     </Typography>
     <Box my={4} flex={1} overflow="auto">
-      <Link href="/articles/tag/react">
+      <Link href="/articles/tag/React" passHref>
         React Articles
       </Link>
     </Box>
