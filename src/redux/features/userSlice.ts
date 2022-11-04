@@ -4,6 +4,7 @@ import { convertArticleToFavoriteItem } from '../../helpers/article-helper';
 import {
   Article, AvatarResponse, FavoriteItem, Profile, UploadFileParams, UserSliceType,
 } from '../../types/article-types';
+import { consoleLog } from '../../utils/console-log';
 
 export const defaultProfileValues: Profile = {
   firstName : '',
@@ -69,10 +70,10 @@ const userSlice = createSlice({
 
     uploadAvatarRequest: (state, action: PayloadAction<UploadFileParams>) => {
       state.status = 'loading';
-      console.log('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarRequest', action, state);
+      consoleLog('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarRequest', action, state);
     },
     uploadAvatarSuccess: (state, action: PayloadAction<AvatarResponse>) => {
-      console.log('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarSuccess', action, state);
+      consoleLog('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarSuccess', action, state);
       state.status = 'loaded';
 
       state.profile = { ...state.profile, avatarUrl: action.payload.avatarUrl };
@@ -84,7 +85,7 @@ const userSlice = createSlice({
         ...action.payload,
         avatarUrl: state.profile.avatarUrl, // avatarUrl is update separately
       };
-      console.log('🚀 ~ file: userSlice.ts ~ line 57 ~ updateProfileRequest', action, state);
+      consoleLog('🚀 ~ file: userSlice.ts ~ line 57 ~ updateProfileRequest', action, state);
     },
   },
 });

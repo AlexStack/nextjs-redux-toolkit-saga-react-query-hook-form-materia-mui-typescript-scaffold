@@ -8,6 +8,7 @@ import {
   Article, ArticleFilterParams, AvatarResponse, UploadFileParams,
 } from '../types/article-types';
 import userSlice from './features/userSlice';
+import { consoleLog } from '../utils/console-log';
 
 export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
   try {
@@ -22,7 +23,7 @@ export function* fetchArticles(action: PayloadAction<ArticleFilterParams>) {
 
     yield put(articleSlice.actions.getArticlesSuccess(newData));
   } catch (e: any) {
-    console.log('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ e', e);
+    consoleLog('🚀 ~ file: saga.ts ~ line 19 ~ function*fetchArticles ~ e', e);
 
     yield put(articleSlice.actions.getArticlesFailure(e.message));
   }
@@ -42,11 +43,11 @@ export function* uploadAvatar(action: PayloadAction<UploadFileParams>) {
   try {
     const response:AvatarResponse = yield call(userApi.uploadAvatar, action.payload);
 
-    console.log('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ response', response);
+    consoleLog('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ response', response);
 
     yield put(userSlice.actions.uploadAvatarSuccess(response));
   } catch (e: any) {
-    console.log('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ error', e);
+    consoleLog('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ error', e);
 
     // yield put(articleSlice.actions.getArticleDetailFailure(e.message));
   }

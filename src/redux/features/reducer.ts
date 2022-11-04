@@ -19,7 +19,7 @@ const sliceReducer =  {
 const rootReducer = (state: any, action: AnyAction): CombinedState<ReducerState> => {
   // Doc: https://github.com/kirill-konshin/next-redux-wrapper#state-reconciliation-during-hydration
   if (action.type === HYDRATE) {
-    // console.log('🚀 ~ file: reducer.ts ~ line 20 ~ from hydration', action, mainConfig.isClientSide, state);
+    // consoleLog('🚀 ~ file: reducer.ts ~ line 20 ~ from hydration', action, mainConfig.isClientSide, state);
 
     const nextState = {
       ...state, // use previous state
