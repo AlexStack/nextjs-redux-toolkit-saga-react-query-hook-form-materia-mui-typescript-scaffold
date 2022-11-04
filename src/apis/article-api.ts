@@ -9,6 +9,11 @@ interface ReactQueryFnProps<T> {
 const axiosInstance = axios.create({
   baseURL: `${BASE_API_URI}/`,
   timeout: 4999,
+  headers: {
+    'Content-Type': 'application/json',
+    'api-key'     : process.env.NEXT_DEV_DOT_TO_API_KEY || 'Missing dev.to api key',
+    accept        : 'application/vnd.forem.api-v1+json',
+  },
 });
 
 export const getArticles = async ({ tag = 'react', page = 1 }:ArticleFilterParams):Promise<Article[]> => {
