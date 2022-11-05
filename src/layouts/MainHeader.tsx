@@ -50,7 +50,7 @@ const MainHeader = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <Typography
               variant="h6"
               noWrap

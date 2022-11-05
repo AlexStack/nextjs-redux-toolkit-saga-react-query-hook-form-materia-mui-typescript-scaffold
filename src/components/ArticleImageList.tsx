@@ -50,7 +50,7 @@ const ArticleImageList = ({
         const imageUrl = getArticleImgUrl(item);
         const subtitle = `${getFormattedDate(item.published_at)}, ${item.reading_time_minutes} minutes to read`;
         return (
-          <Link href={getArticleLink(item)} key={item.id}>
+          <Link href={getArticleLink(item)} key={item.id} prefetch={false}>
             <ImageListItem key={item.id} sx={{ cursor: 'pointer', marginBottom: '2rem' }}>
               <Image
                 src={imageUrl}

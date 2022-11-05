@@ -128,7 +128,7 @@ const ArticleDetail = ({ article }:Props) => {
               />
 
               {allTags.map((tag) => (
-                <Link href={getTagLink(tag)} passHref key={`${tag}-${Math.random()}`}>
+                <Link href={getTagLink(tag)} passHref key={`${tag}-${Math.random()}`} prefetch={false}>
                   <Chip label={tag} variant="outlined" component="a" sx={{ margin: '0 1rem 1rem 0' }} />
                 </Link>
               ))}

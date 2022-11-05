@@ -36,12 +36,12 @@ const fromDate = (date?: string) => {
 
 export const PageBreadcrumbs = ({ children }:ChildrenProps) => (
   <Breadcrumbs aria-label="breadcrumb">
-    <Link href="/">
+    <Link href="/" prefetch={false}>
       <Button variant="text" startIcon={<HomeIcon />}>
         Home
       </Button>
     </Link>
-    <Link href="/">
+    <Link href="/" prefetch={false}>
       <Button variant="text" startIcon={<PersonIcon />}>
         User
       </Button>
@@ -120,7 +120,7 @@ export const PageListItems = ({
                   <Avatar alt={item.author} src={item.author_avatar} />
                 )}
               </ListItemAvatar>
-              <Link href={getArticleLink(item)}>
+              <Link href={getArticleLink(item)} prefetch={false}>
                 <ListItemText
                   primary={<Typography variant="h6">{item.title}</Typography>}
                   sx={{ cursor: 'pointer' }}
