@@ -19,6 +19,7 @@ import {
 } from '../helpers/article-helper';
 import { ReduxState } from '../redux/store';
 import FavoriteItemHeartIcon from './FavoriteItemHeartIcon';
+import SearchBar from './SearchBar';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -131,6 +132,8 @@ const ArticleDetail = ({ article }:Props) => {
                   <Chip label={tag} variant="outlined" component="a" sx={{ margin: '0 1rem 1rem 0' }} />
                 </Link>
               ))}
+
+              <SearchBar />
             </Box>
           )}
 
@@ -141,8 +144,8 @@ const ArticleDetail = ({ article }:Props) => {
         aria-label="like"
         sx={{
           position: 'fixed',
-          bottom  : (theme) => theme.spacing(10),
-          right   : (theme) => theme.spacing(5),
+          bottom  : (theme) => theme.spacing(20),
+          right   : (theme) => theme.spacing(3),
         }}
         color={isFavorite ? 'inherit' : 'default'}
       >
