@@ -14,7 +14,10 @@ export const mainConfig = {
   // Redux PersistConfig props
   // set enabled to false can disable persist (requires remove PersistGate in _app.tx)
   reduxPersistConfigs: {
-    key: 'AlexAppData', version: 0.4, debug: IS_DEV, enabled: true,
+    key    : 'AlexAppData',
+    version: 0.4,
+    debug  : IS_DEV,
+    enabled: true,
   },
 
   // max number of recent visited articles to save in local storage
@@ -31,6 +34,9 @@ export const mainConfig = {
 
   // is client side, we can force it to true to debug -> isClientSide:true
   isClientSide,
+
+  // cached json file path from api
+  dataFilePath: './public/savedData',
 };
 
 export default mainConfig;
