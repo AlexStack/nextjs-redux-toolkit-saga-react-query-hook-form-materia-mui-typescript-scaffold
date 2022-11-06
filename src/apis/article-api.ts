@@ -1,7 +1,10 @@
 import axios from 'axios';
+import { mainConfig } from '../configs/main-config';
 import { BASE_API_URI, ITEMS_PER_PAGE } from '../constants/article-const';
 import { Article, ArticleFilterParams, ArticleDetailParams } from '../types/article-types';
 import { consoleLog } from '../utils/console-log';
+
+const fs = require('fs');
 
 interface ReactQueryFnProps<T> {
   queryKey: [string, T];
@@ -26,8 +29,25 @@ export const getArticles = async ({ tag = 'react', page = 1 }:ArticleFilterParam
 
 export const getArticleDetail = async ({ id }:ArticleDetailParams):Promise<Article | null> => {
   const apiEndpoint = `articles/${id}`;
+  const jsonFile    = `${mainConfig.dataFilePath}/article-${id}.json`;
   try {
+    // read data from local json file first
+    const fsStats = fs.statSync(jsonFile, { throwIfNoEntry: false });
+    if (fsStats && 'mtime' in fsStats) {
+      // consoleLog('fs stats', fsStats);
+      const articleData = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+      if ('id' in articleData) {
+        return articleData;
+      }
+    }
+
     const response = await axiosInstance.get(apiEndpoint);
+
+    // save data to json file
+    if (('id' in response.data) && 'body_html' in response.data) {
+      fs.writeFileSync(jsonFile, JSON.stringify(response.data), 'utf8');
+    }
+
     return response.data;
   } catch (error) {
     consoleLog('🚀 ~ file: article-api.ts ~ line 27 ~ getArticleDetail ~ apiEndpoint', apiEndpoint, error);
