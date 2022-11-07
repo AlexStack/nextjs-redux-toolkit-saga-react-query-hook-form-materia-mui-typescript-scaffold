@@ -22,9 +22,44 @@ const axiosInstance = axios.create({
 
 export const getArticles = async ({ tag = 'react', page = 1 }:ArticleFilterParams):Promise<Article[]> => {
   const apiEndpoint = `articles?tag=${tag}&page=${page}&per_page=${ITEMS_PER_PAGE}`;
-  const response    = await axiosInstance.get(apiEndpoint);
+  // convert tag to file name
+  const fileName = tag.toLowerCase().trim().replace(/[^a-zA-Z0-9]/g, '_');
+  const jsonFile = `${mainConfig.dataFilePath}/tag-${fileName}-${page}-${ITEMS_PER_PAGE}.json`;
+
+  try {
+    // read data from local json file first
+    if (!mainConfig.isClientSide) {
+      const fsStats = fs.statSync(jsonFile, { throwIfNoEntry: false });
+      if (fsStats && 'mtime' in fsStats) {
+        const articleData = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+        if (Array.isArray(articleData) && articleData.length && 'id' in articleData[0]) {
+          return articleData;
+        }
+      }
+    }
+
+    const response = await axiosInstance.get(apiEndpoint);
+    consoleLog('🚀 ~ file: article-api.ts ~ line 38 ~ getArticles ~ response', response);
+
+    // save data to json file
+    if (!mainConfig.isClientSide && Array.isArray(response.data) && response.data.length && 'id' in response.data[0] && 'title' in response.data[0]) {
+      fs.writeFileSync(jsonFile, JSON.stringify(response.data), 'utf8');
+    }
+
+    return response.data;
+  } catch (error) {
+    consoleLog('🚀 ~ file: article-api.ts ~ line 46 ~ getArticles ~ apiEndpoint', apiEndpoint, error);
+    if (axios.isAxiosError(error)) {
+      if (error.code === 'ECONNABORTED') {
+        // Do something for timeout ...
+      }
+    }
+  }
+  return [];
+
+  // const response    = await axiosInstance.get(apiEndpoint);
   // consoleLog('🚀 ~ file: article-api.ts ~ line 12 ~ getArticles ~ apiEndpoint', apiEndpoint);
-  return response.data;
+  // return response.data;
 };
 
 export const getArticleDetail = async ({ id }:ArticleDetailParams):Promise<Article | null> => {
