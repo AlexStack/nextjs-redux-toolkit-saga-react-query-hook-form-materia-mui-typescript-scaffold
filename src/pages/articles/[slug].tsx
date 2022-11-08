@@ -16,6 +16,9 @@ import getIdFromSlug from '../../utils/get-id-from-slug';
 import ArticleDetail from '../../components/ArticleDetail';
 import userSlice from '../../redux/features/userSlice';
 import HeadMeta from '../../layouts/HeadMeta';
+import { Article } from '../../types/article-types';
+
+const fs = require('fs');
 
 const ArticleDetails: NextPage = ({
   serverRedux,
@@ -90,15 +93,34 @@ export const getStaticPropsFromRedux: GetStaticProps = reduxWrapper.getStaticPro
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = [{
+  const files:string[] = fs.readdirSync(mainConfig.dataFilePath);
+  const allSlugs       = files.map((file) => {
+    if (!file.includes('tag-')) {
+      return [];
+    }
+    const articleData = JSON.parse(fs.readFileSync(`${mainConfig.dataFilePath}/${file}`, 'utf8'));
+    if (Array.isArray(articleData) && articleData.length && 'id' in articleData[0] && 'slug' in articleData[0] && articleData[0].cover_image) {
+      return articleData.map((article:Article) => `${article.slug}-${article.id}`);
+    }
+
+    return [];
+  }).flat();
+
+  const paths = allSlugs.slice(0, 500).map((slug) => ({
     params: {
-      slug: 'setting-up-eslint-prettier-with-webpack-in-vscode-29fg-1162060',
+      slug,
     },
-  }, {
-    params: {
-      slug: 'highlight-on-the-new-features-of-next-js-13-config-2022-1a3i-1236942',
-    },
-  }];
+  }));
+
+  // const paths = [{
+  //   params: {
+  //     slug: 'setting-up-eslint-prettier-with-webpack-in-vscode-29fg-1162060',
+  //   },
+  // }, {
+  //   params: {
+  //     slug: 'highlight-on-the-new-features-of-next-js-13-config-2022-1a3i-1236942',
+  //   },
+  // }];
   return { paths, fallback: true };
 };
 
