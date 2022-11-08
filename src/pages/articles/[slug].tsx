@@ -111,16 +111,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
       slug,
     },
   }));
-
-  // const paths = [{
-  //   params: {
-  //     slug: 'setting-up-eslint-prettier-with-webpack-in-vscode-29fg-1162060',
-  //   },
-  // }, {
-  //   params: {
-  //     slug: 'highlight-on-the-new-features-of-next-js-13-config-2022-1a3i-1236942',
-  //   },
-  // }];
   return { paths, fallback: true };
 };
 

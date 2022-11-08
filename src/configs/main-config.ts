@@ -37,6 +37,9 @@ export const mainConfig = {
 
   // cached json file path from api
   dataFilePath: './public/savedData',
+
+  // URI for the site
+  siteUri: IS_DEV ? 'http://localhost:3000' : 'https://redux.10168.tech',
 };
 
 export default mainConfig;
