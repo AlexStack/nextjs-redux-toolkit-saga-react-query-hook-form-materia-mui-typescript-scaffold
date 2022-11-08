@@ -19,15 +19,16 @@ export default async function handler(
   const jsonFile    = `${mainConfig.dataFilePath}/tag-${fileName}-${page}-${ITEMS_PER_PAGE}.json`;
 
   try {
-    // read data from local json file first
-    const fsStats = fs.statSync(jsonFile, { throwIfNoEntry: false });
-    if (fsStats && 'mtime' in fsStats) {
+    if (mainConfig.isFetchDataFromLocal) {
+      const fsStats = fs.statSync(jsonFile, { throwIfNoEntry: false });
+      if (fsStats && 'mtime' in fsStats) {
       // consoleLog('fs stats', fsStats);
-      const articleData = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
-      if (Array.isArray(articleData) && articleData.length && 'id' in articleData[0]) {
-        consoleLog('🚀 fetch article tag list form local:', jsonFile);
-        res.status(200).json(articleData as Article[]);
-        return;
+        const articleData = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+        if (Array.isArray(articleData) && articleData.length && 'id' in articleData[0]) {
+          consoleLog('🚀 fetch article tag list form local:', jsonFile);
+          res.status(200).json(articleData as Article[]);
+          return;
+        }
       }
     }
 

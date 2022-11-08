@@ -5,7 +5,7 @@ const isClientSide = typeof window !== 'undefined';
 export const mainConfig = {
   // set to false will not fetch the dynamic data from the client side
   // then we can see what's the NextJs static pages looks like - for SEO
-  isStaticPageDebugDisabled: true,
+  isStaticPageDebugDisabled: false,
 
   // set to false will use React Query for getStaticProps instead of use Redux
   // client side still check ReduxState first, then use React Query
@@ -40,6 +40,9 @@ export const mainConfig = {
 
   // URI for the site
   siteUri: IS_DEV ? 'http://localhost:3000' : 'https://redux.10168.tech',
+
+  // fetch data from local json file first
+  isFetchDataFromLocal: true,
 };
 
 export default mainConfig;

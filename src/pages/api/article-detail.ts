@@ -14,15 +14,16 @@ export default async function handler(
   const id       = req.query.id as string;
   const jsonFile = `${mainConfig.dataFilePath}/article-${id}.json`;
   try {
-    // read data from local json file first
-    const fsStats = fs.statSync(jsonFile, { throwIfNoEntry: false });
-    if (fsStats && 'mtime' in fsStats) {
+    if (mainConfig.isFetchDataFromLocal) {
+      const fsStats = fs.statSync(jsonFile, { throwIfNoEntry: false });
+      if (fsStats && 'mtime' in fsStats) {
       // consoleLog('fs stats', fsStats);
-      const articleData = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
-      if ('id' in articleData) {
-        consoleLog('🚀 fetch article data form local:', jsonFile);
-        res.status(200).json(articleData as Article);
-        return;
+        const articleData = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+        if ('id' in articleData) {
+          consoleLog('🚀 fetch article data form local:', jsonFile);
+          res.status(200).json(articleData as Article);
+          return;
+        }
       }
     }
 
