@@ -70,7 +70,8 @@ const userSlice = createSlice({
 
     uploadAvatarRequest: (state, action: PayloadAction<UploadFileParams>) => {
       state.status = 'loading';
-      consoleLog('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarRequest', action, state);
+      consoleLog('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarRequest2', action, state);
+      state.profile = { ...state.profile, uploadProvider: action.payload.provider };
     },
     uploadAvatarSuccess: (state, action: PayloadAction<AvatarResponse>) => {
       consoleLog('🚀 ~ file: userSlice.ts ~ line 57 ~ uploadAvatarSuccess', action, state);
