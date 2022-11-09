@@ -9,7 +9,7 @@ export interface ArticleDetailParams {
 
 export interface UploadFileParams {
   file: File;
-  provider: 'cloudinary' | 'imagekit';
+  provider: 'cloudinary' | 'imagekit' | 'cloudflare-r2';
 }
 
 export interface PageMeta {

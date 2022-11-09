@@ -137,6 +137,7 @@ const ProfileForm = () => {
           >
             <FormControlLabel value="cloudinary" control={<Radio color="primary" />} label="Upload to Cloudinary" />
             <FormControlLabel value="imagekit" control={<Radio color="success" />} label="Upload to ImageKit" />
+            <FormControlLabel value="cloudflare-r2" control={<Radio color="warning" />} label="Upload to Cloudflare R2" />
           </RadioGroup>
         </Stack>
 

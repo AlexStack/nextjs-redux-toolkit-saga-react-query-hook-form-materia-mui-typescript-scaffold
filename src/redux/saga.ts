@@ -43,11 +43,11 @@ export function* uploadAvatar(action: PayloadAction<UploadFileParams>) {
   try {
     const response:AvatarResponse = yield call(userApi.uploadAvatar, action.payload);
 
-    consoleLog('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ response', response);
+    consoleLog('🚀 ~ file: saga.ts ~ line 46 ~ function*uploadAvatar ~ response', response);
 
     yield put(userSlice.actions.uploadAvatarSuccess(response));
   } catch (e: any) {
-    consoleLog('🚀 ~ file: saga.ts ~ line 40 ~ function*uploadAvatar ~ error', e);
+    consoleLog('🚀 ~ file: saga.ts ~ line 50 ~ function*uploadAvatar ~ error', e);
 
     // yield put(articleSlice.actions.getArticleDetailFailure(e.message));
   }
