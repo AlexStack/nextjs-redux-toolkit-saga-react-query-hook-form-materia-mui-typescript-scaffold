@@ -55,10 +55,10 @@ const cloudflareR2Auth = async (
 
   if (dataType === 'bucketList') {
     const bucketList = await S3.send(new ListBucketsCommand(''));
-    res.status(200).json(bucketList);
+    res.json(bucketList);
   } else if (dataType === 'objList') {
     const objList = await S3.send(new ListObjectsV2Command({ Bucket: configs.bucketName }));
-    res.status(200).json(objList);
+    res.json(objList);
   } else if (dataType === 'signedUrl') {
     const uploadSignedUrl = await getSignedUrl(
       S3,
@@ -72,10 +72,12 @@ const cloudflareR2Auth = async (
 
       { expiresIn },
     );
-    res.status(200).json({ signedUrl: uploadSignedUrl, putObjectKey, expire: expiresIn });
+    res.json({ signedUrl: uploadSignedUrl, putObjectKey, expire: expiresIn });
+  } else {
+    res.json({ message: 'Wrong data type found' });
   }
 
-  res.status(200).json({ message: 'Wrong data type found' });
+  res.status(200).end();
 };
 
 export default function handler(
@@ -83,8 +85,8 @@ export default function handler(
   res: NextApiResponse<CloudflareR2AuthType | AlertMessage>,
 ) {
   if (req.method !== 'POST') {
-    res.status(405).json({ message: 'Method not allowed' });
-    return;
+    res.json({ message: 'Method not allowed' });
+    res.status(405).end();
   }
   cloudflareR2Auth(req, res);
 }
