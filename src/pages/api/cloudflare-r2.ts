@@ -48,10 +48,10 @@ const cloudflareR2Auth = async (
     },
   });
 
-  const dataType     = req.body.dataType as string || 'signedUrl';
-  const putObjectKey = req.body.objKey as string || 'gifs/test.gif';
-  // const objContentType = req.body.objType as string || 'image/jpeg';
-  const expiresIn = 3600;
+  const dataType       = req.body.dataType as string || 'signedUrl';
+  const putObjectKey   = req.body.objKey as string || 'gifs/test.gif';
+  const objContentType = req.body.objType as string || 'image/jpeg';
+  const expiresIn      = 3600;
 
   if (dataType === 'bucketList') {
     const bucketList = await S3.send(new ListBucketsCommand(''));
@@ -64,9 +64,11 @@ const cloudflareR2Auth = async (
       S3,
       new PutObjectCommand(
         {
-          Bucket: configs.bucketName,
-          Key   : putObjectKey,
-          // ContentType: objContentType,
+          Bucket     : configs.bucketName,
+          Key        : putObjectKey,
+          ContentType: objContentType,
+          ACL        : 'public-read',
+          // ContentDisposition: 'attachment',
         },
       ),
 
@@ -80,13 +82,15 @@ const cloudflareR2Auth = async (
   res.status(200).end();
 };
 
-export default function handler(
+const handler = async (
   req: NextApiRequest,
   res: NextApiResponse<CloudflareR2AuthType | AlertMessage>,
-) {
+): Promise<void> => {
   if (req.method !== 'POST') {
     res.json({ message: 'Method not allowed' });
     res.status(405).end();
   }
-  cloudflareR2Auth(req, res);
-}
+  await cloudflareR2Auth(req, res);
+};
+
+export default handler;
