@@ -38,7 +38,7 @@ export const uploadFileToCloudflareR2 = async ({
 
   const formData = new FormData();
   formData.append('file', file);
-  // formData.append('Content-Type', file.type);
+  formData.append('Content-Type', file.type);
   // formData.append('fileName', fileName || file.name);
   // formData.append('folder', folder);
   // formData.append('publicKey', cloudflareR2Auth.publicKey);
@@ -50,14 +50,20 @@ export const uploadFileToCloudflareR2 = async ({
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 
-  if (uploadRes.status !== 200) {
-    throw new Error('Upload failed');
-  }
+  // const uploadRes = await fetch(cloudflareR2Auth.signedUrl, {
+  //   body   : file,
+  //   method : 'PUT',
+  //   mode   : 'cors',
+  //   headers: { 'Content-Type': 'application/octet-stream' },
+  // });
   consoleLog(
     `\nResponse returned by signed URL: ${uploadRes}\n`,
   );
+  if (uploadRes.status !== 200) {
+    throw new Error('Upload failed');
+  }
 
-  const url = `https://images.funnymemes.cc/${objKey}`;
+  const url = `${cloudflareR2Auth.urlPrefix}/${objKey}`;
 
   return {
     url, file, folder, objKey,

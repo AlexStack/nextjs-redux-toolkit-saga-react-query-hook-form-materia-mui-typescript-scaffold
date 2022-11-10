@@ -25,7 +25,8 @@ export interface AlertMessage {
 export interface CloudflareR2AuthType {
   expire: number;
   signedUrl: string;
-  putObjectKey: string ;
+  putObjectKey: string;
+  urlPrefix: string
 }
 
 const cloudflareR2Auth = async (
@@ -38,6 +39,7 @@ const cloudflareR2Auth = async (
     urlEndpoint    : process.env.CLOUDFLARE_R2_API_END_POINT || 'Missing CLOUDFLARE_R2_API_END_POINT',
     secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || 'Missing CLOUDFLARE_R2_SECRET_ACCESS_KEY',
     bucketName     : process.env.CLOUDFLARE_R2_DEFAULT_BUCKET || 'Missing CLOUDFLARE_R2_DEFAULT_BUCKET',
+    urlPrefix      : process.env.CLOUDFLARE_R2_URL_PREFIX || 'Missing CLOUDFLARE_R2_URL_PREFIX',
   };
   const S3      = new S3Client({
     region     : 'auto',
@@ -67,14 +69,15 @@ const cloudflareR2Auth = async (
           Bucket     : configs.bucketName,
           Key        : putObjectKey,
           ContentType: objContentType,
-          ACL        : 'public-read',
-          // ContentDisposition: 'attachment',
+          // ContentDisposition: 'inline',
         },
       ),
 
       { expiresIn },
     );
-    res.json({ signedUrl: uploadSignedUrl, putObjectKey, expire: expiresIn });
+    res.json({
+      signedUrl: uploadSignedUrl, putObjectKey, urlPrefix: configs.urlPrefix, expire: expiresIn,
+    });
   } else {
     res.json({ message: 'Wrong data type found' });
   }
