@@ -47,7 +47,8 @@ export const uploadFileToCloudflareR2 = async ({
   // formData.append('token', cloudflareR2Auth.token);
 
   const uploadRes = await axios.put(cloudflareR2Auth.signedUrl, file, {
-    headers: { 'Content-Type': 'multipart/form-data' },
+    // headers: { 'Content-Type': 'multipart/form-data' },
+    // headers: { 'Content-Type': file.type },
   });
 
   // const uploadRes = await fetch(cloudflareR2Auth.signedUrl, {

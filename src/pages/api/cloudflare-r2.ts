@@ -11,6 +11,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
  *
  * API endpoint: http://localhost:3000/api/cloudflare-r2
  *
+ * Allow CORS: https://kian.org.uk/configuring-cors-on-cloudflare-r2/
+ *
  * ============ Example of .env.local ============
  * CLOUDFLARE_R2_ACCOUNT_ID="7bc05994f39e3b996"
  * CLOUDFLARE_R2_ACCESS_KEY_ID="038898385ba14196"
@@ -62,17 +64,16 @@ const cloudflareR2Auth = async (
     const objList = await S3.send(new ListObjectsV2Command({ Bucket: configs.bucketName }));
     res.json(objList);
   } else if (dataType === 'signedUrl') {
+    const putObjectCommandProps = {
+      Bucket     : configs.bucketName,
+      Key        : putObjectKey,
+      ContentType: objContentType,
+      // ContentDisposition: 'inline',
+    };
+
     const uploadSignedUrl = await getSignedUrl(
       S3,
-      new PutObjectCommand(
-        {
-          Bucket     : configs.bucketName,
-          Key        : putObjectKey,
-          ContentType: objContentType,
-          // ContentDisposition: 'inline',
-        },
-      ),
-
+      new PutObjectCommand(putObjectCommandProps),
       { expiresIn },
     );
     res.json({
