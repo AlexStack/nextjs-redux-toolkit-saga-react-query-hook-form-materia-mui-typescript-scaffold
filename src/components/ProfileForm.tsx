@@ -119,7 +119,7 @@ const ProfileForm = () => {
                 component="label"
               >
                 <PhotoCamera />
-                <input hidden accept="image/*" type="file" onChange={uploadAvatar} />
+                <input hidden accept="image/*,.heic" type="file" onChange={uploadAvatar} />
               </Avatar>
             </Tooltip>
             <Typography variant="caption">

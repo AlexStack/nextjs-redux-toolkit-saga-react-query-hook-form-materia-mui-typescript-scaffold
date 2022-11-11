@@ -68,7 +68,6 @@ const cloudflareR2Auth = async (
       Bucket     : configs.bucketName,
       Key        : putObjectKey,
       ContentType: objContentType,
-      // ContentDisposition: 'inline',
     };
 
     const uploadSignedUrl = await getSignedUrl(

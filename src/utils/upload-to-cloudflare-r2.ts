@@ -21,24 +21,23 @@ export interface UploadFileToCloudflareR2Props {
   fromProvider?: UploadFileParams['provider'];
 }
 
-const uploadFromImagekit = async (
-  file: File,
-  folder: string,
-  fileName: string | undefined,
-  cloudflareR2Auth: CloudflareR2AuthType,
-  objKey: string,
-) => {
-  const imageKitRes     = await uploadFileToImageKit({
-    file, folder, fileName,
-  });
-  const resizedImageUrl = `${imageKitRes.url}?tr=w-${mainConfig.maxImageWidth},c-at_max`;
+export interface UploadByPresignedUrlProps {
+  file: File;
+  folder: string;
+  objKey: string;
+  cloudflareR2Auth: CloudflareR2AuthType;
+  fileData?: Blob | File;
+}
 
-  const resizedImageRes = await axios.get(resizedImageUrl, { responseType: 'blob' });
-
-  consoleLog('🚀 ~ file: upload-to-cloudflare-r2.ts ~ line 46 ~ imageKitRes', imageKitRes, resizedImageUrl, resizedImageRes);
-
+const uploadByPresignedUrl = async ({
+  file,
+  folder,
+  objKey,
+  cloudflareR2Auth,
+  fileData,
+}:UploadByPresignedUrlProps) => {
   const formData = new FormData();
-  formData.append('data', resizedImageRes.data);
+  formData.append('data', fileData || file);
   formData.append('Content-Type', file.type);
   // formData.append('fileName', fileName || file.name);
   // formData.append('folder', folder);
@@ -46,7 +45,6 @@ const uploadFromImagekit = async (
   // formData.append('signature', cloudflareR2Auth.signature);
   // formData.append('expire', cloudflareR2Auth.expire.toString());
   // formData.append('token', cloudflareR2Auth.token);
-
   // upload resizedImageRes to s3 using axios.put
   // const uploadRes = await axios.put(cloudflareR2Auth.signedUrl, resizedImageRes.data, {
   //   headers: {
@@ -57,8 +55,8 @@ const uploadFromImagekit = async (
   const uploadRes = await fetch(cloudflareR2Auth.signedUrl, {
     method : 'PUT',
     mode   : 'cors',
-    body   : formData,
-    // body   : resizedImageRes.data,
+    // body   : formData,
+    body   : fileData || file,
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -73,7 +71,7 @@ const uploadFromImagekit = async (
   //   },
   //   data: resizedImageRes.data,
   // });
-  consoleLog('🚀 ~ file: upload-to-cloudflare-r2.ts ~ line 67 ~ uploadRes', uploadRes);
+  consoleLog('🚀 ~ file: upload-to-cloudflare-r2.ts ~ line 67 ~ uploadRes22', uploadRes);
 
   const url = `${cloudflareR2Auth.urlPrefix}/${objKey}`;
 
@@ -82,63 +80,57 @@ const uploadFromImagekit = async (
   };
 };
 
+const uploadFromImagekit = async ({
+  file,
+  folder,
+  objKey,
+  cloudflareR2Auth,
+}:UploadByPresignedUrlProps) => {
+  const imageKitRes     = await uploadFileToImageKit({
+    file, folder,
+  });
+  const resizedImageUrl = `${imageKitRes.url}?tr=w-${mainConfig.maxImageWidth},c-at_max`;
+
+  const resizedImageRes = await axios.get(resizedImageUrl, { responseType: 'blob' });
+
+  consoleLog('🚀 ~ file: upload-to-cloudflare-r2.ts ~ line 46 ~ imageKitRes', imageKitRes, resizedImageUrl, resizedImageRes);
+
+  return uploadByPresignedUrl({
+    file, folder, objKey, cloudflareR2Auth, fileData: resizedImageRes.data,
+  });
+};
+
 export const uploadFileToCloudflareR2 = async ({
-  file, folder = 'avatars', fileName, auth, fromProvider = 'imagekit',
+  file, folder = 'avatars', auth, fromProvider = 'imagekit',
   authApiEndpoint = '/api/cloudflare-r2',
 }:UploadFileToCloudflareR2Props):Promise<CloudflareR2ResType> => {
   let cloudflareR2Auth = auth;
 
-  const objKey = `${folder}/${(fileName || file.name).trim().replace(/\s+/g, '_')}`;
+  // const objKey = `${folder}/${(fileName || file.name).trim().replace(/\s+/g, '_')}`;
+
+  // get lower file extension
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+  // generate objKey by imageId and date time string
+  const objKey = `${folder}/${new Date().toISOString().replace(/:/g, '-')}.${fileExtension}`;
+
   if (!auth) {
     const authRes = await axios.post(authApiEndpoint, { objKey, objType: file.type });
 
     cloudflareR2Auth = authRes.data as CloudflareR2AuthType;
   }
+
   if (!cloudflareR2Auth?.signedUrl) {
     throw new Error('Get cloudflareR2Auth failed');
   }
 
-  // curl -X PUT https://my-bucket-name.<accountid>.r2.cloudflarestorage.com/dog.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential<credential>&X-Amz-Date=<timestamp>&X-Amz-Expires=3600&X-Amz-Signature=<signature>&X-Amz-SignedHeaders=host&x-id=PutObject -F "data=@dog.png"
-
-  // "https://memes.7bc05994f39e3b996292718545a408e1.r2.cloudflarestorage.com/gifs/1-v97.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=03889894fde0d44a8064cb385ba14196%2F20221109%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20221109T193708Z&X-Amz-Expires=3600&X-Amz-Signature=a2918027c7b820bdfcf0f574d1cc21f4421fc7d243c28d73213bee0fd7f3101f&X-Amz-SignedHeaders=host&x-id=PutObject"
-
   if (fromProvider === 'imagekit') {
-    return uploadFromImagekit(file, folder, fileName, cloudflareR2Auth, objKey);
+    return uploadFromImagekit({
+      file, folder, objKey, cloudflareR2Auth,
+    });
   }
 
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('Content-Type', file.type);
-  // formData.append('fileName', fileName || file.name);
-  // formData.append('folder', folder);
-  // formData.append('publicKey', cloudflareR2Auth.publicKey);
-  // formData.append('signature', cloudflareR2Auth.signature);
-  // formData.append('expire', cloudflareR2Auth.expire.toString());
-  // formData.append('token', cloudflareR2Auth.token);
-
-  const uploadRes = await axios.put(cloudflareR2Auth.signedUrl, file, {
-    // headers: { 'Content-Type': 'multipart/form-data' },
-    // headers: { 'Content-Type': file.type },
+  return uploadByPresignedUrl({
+    file, folder, objKey, cloudflareR2Auth,
   });
-
-  // const uploadRes = await fetch(cloudflareR2Auth.signedUrl, {
-  //   body   : file,
-  //   method : 'PUT',
-  //   mode   : 'cors',
-  //   headers: { 'Content-Type': 'application/octet-stream' },
-  // });
-  consoleLog(
-    `\nResponse returned by signed URL: ${uploadRes}\n`,
-  );
-  if (uploadRes.status !== 200) {
-    throw new Error('Upload failed');
-  }
-
-  const url = `${cloudflareR2Auth.urlPrefix}/${objKey}`;
-
-  return {
-    url, file, folder, objKey,
-  };
 };
-
-// export default uploadFileToCloudflareR2;
