@@ -46,6 +46,7 @@ const uploadFromImagekit = async (
   // formData.append('signature', cloudflareR2Auth.signature);
   // formData.append('expire', cloudflareR2Auth.expire.toString());
   // formData.append('token', cloudflareR2Auth.token);
+
   // upload resizedImageRes to s3 using axios.put
   // const uploadRes = await axios.put(cloudflareR2Auth.signedUrl, resizedImageRes.data, {
   //   headers: {
@@ -55,7 +56,9 @@ const uploadFromImagekit = async (
   // upload resizedImageRes to s3 using fetch
   const uploadRes = await fetch(cloudflareR2Auth.signedUrl, {
     method : 'PUT',
-    body   : resizedImageRes.data,
+    mode   : 'cors',
+    body   : formData,
+    // body   : resizedImageRes.data,
     headers: {
       'Content-Type': 'multipart/form-data',
     },
