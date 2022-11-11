@@ -43,6 +43,12 @@ export const mainConfig = {
 
   // fetch data from local json file first
   isFetchDataFromLocal: true,
+
+  // resize to max image width after upload
+  maxImageWidth: 200,
+
+  // resize to max image height after upload
+  maxImageHeight: 800,
 };
 
 export default mainConfig;
