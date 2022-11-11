@@ -29,6 +29,20 @@ export interface UploadByPresignedUrlProps {
   fileData?: Blob | File;
 }
 
+/**
+ * set allow CORS first:
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <CORSRule>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>POST</AllowedMethod>
+        <AllowedMethod>PUT</AllowedMethod>
+        <AllowedMethod>HEAD</AllowedMethod>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedHeader>content-type</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+ */
 const uploadByPresignedUrl = async ({
   file,
   folder,
@@ -36,42 +50,13 @@ const uploadByPresignedUrl = async ({
   cloudflareR2Auth,
   fileData,
 }:UploadByPresignedUrlProps) => {
-  const formData = new FormData();
-  formData.append('data', fileData || file);
-  formData.append('Content-Type', file.type);
-  // formData.append('fileName', fileName || file.name);
-  // formData.append('folder', folder);
-  // formData.append('publicKey', cloudflareR2Auth.publicKey);
-  // formData.append('signature', cloudflareR2Auth.signature);
-  // formData.append('expire', cloudflareR2Auth.expire.toString());
-  // formData.append('token', cloudflareR2Auth.token);
-  // upload resizedImageRes to s3 using axios.put
-  // const uploadRes = await axios.put(cloudflareR2Auth.signedUrl, resizedImageRes.data, {
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //   },
-  // });
-  // upload resizedImageRes to s3 using fetch
-  const uploadRes = await fetch(cloudflareR2Auth.signedUrl, {
-    method : 'PUT',
-    mode   : 'cors',
-    // body   : formData,
-    body   : fileData || file,
+  const uploadRes = await axios.put(cloudflareR2Auth.signedUrl, fileData || file, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': file.type,
     },
   });
 
-  // const uploadRes = await axios({
-  //   method : 'PUT',
-  //   url    : cloudflareR2Auth.signedUrl,
-  //   headers: {
-  //     // Accept        : 'application/json',
-  //     'Content-Type': file.type, // 'multipart/form-data',
-  //   },
-  //   data: resizedImageRes.data,
-  // });
-  consoleLog('🚀 ~ file: upload-to-cloudflare-r2.ts ~ line 67 ~ uploadRes22', uploadRes);
+  consoleLog('🚀 ~ file: upload-to-cloudflare-r2.ts ~ line 67 ~ uploadRes55', uploadRes);
 
   const url = `${cloudflareR2Auth.urlPrefix}/${objKey}`;
 
